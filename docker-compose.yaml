@@ -1,0 +1,75 @@
+version: "3.6"
+
+volumes:
+  snapserver-settings:
+  snapserver-fifo:
+
+services:
+  snapclient:
+    image: mgoltzsche/snapcast/snapclient:dev
+    environment:
+      SNAPCLIENT_HOST: 127.0.0.1
+      #SNAPCLIENT_PLAYER: pulse
+      #SNAPCLIENT_PLAYER: pulse:server=tcp:127.0.0.1:4713
+      #PULSE_SERVER: 127.0.0.1
+    network_mode: host
+    restart: unless-stopped
+    # Might be required on a raspberrypi when using alsa directly
+    #privileged: true
+    devices:
+    - "/dev/snd:/dev/snd"
+    volumes:
+    #- type: bind
+    #  source: /etc/asound.conf
+    #  target: /etc/asound.conf
+    - type: bind
+      source: /run # allow the container to detect whether the pulseaudio unix socket should be used
+      target: /host/run
+    #- "$HOME/.pulse:/home/snapclient/.pulse"
+    #- "$HOME/.config/pulse:/home/snapclient/.config/pulse"
+    #- "/etc/machine-id:/etc/machine-id"
+    #- "/dev/shm:/dev/shm"
+    user: ${UID:-1000}
+    depends_on:
+    - snapserver
+  snapserver:
+    image: mgoltzsche/snapcast/snapserver:dev
+    environment:
+      SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=default&mode=read
+      #DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+    volumes:
+    - snapserver-fifo:/snapserver
+    - snapserver-settings:/data
+    #- type: bind
+    #  source: /var/run/avahi-daemon/socket
+    #  target: /var/run/avahi-daemon/socket
+    #- type: bind
+    #  source: /var/run/dbus
+    #  target: /var/run/dbus
+    - type: bind
+      source: /run # allow the container to dynamically select the avahi unix socket to advertise its service
+      target: /host/run
+    #ports:
+    #- "1780:1780"
+    #privileged: true
+    #user: ${UID:-1000}
+    group_add:
+    - 4242
+    - 86
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+    - mopidy
+  mopidy:
+    image: mgoltzsche/mopidy:dev
+    environment:
+      MOPIDY_OUTPUT_PIPE: /snapserver/snapfifo
+    volumes:
+    - snapserver-fifo:/snapserver
+    ports:
+    - "6680:6680"
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.myapp.rule=PathPrefix("/iris")
+    - traefik.http.routers.myapp.entrypoints=web
+    restart: unless-stopped
