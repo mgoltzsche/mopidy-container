@@ -14,3 +14,4 @@ USER mopidy:audio
 ENV MOPIDY_OUTPUT_PIPE=
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
+HEALTHCHECK --interval=5s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/
