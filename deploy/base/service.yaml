@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata: # kpt-merge: /blueprint
+  name: mopidy # kpt-set: ${name}
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|Service|default|blueprint'
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080 # kpt-set: ${port}
+    targetPort: 8080 # kpt-set: ${port}
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/component: webapp

@@ -1,0 +1,16 @@
+# kpt setter values that are applied to other KRM yaml files by `kpt fn render`.
+# See also: https://kpt.dev/guides/variant-constructor-pattern
+apiVersion: v1
+kind: ConfigMap
+metadata: # kpt-merge: /app-config
+  name: app-config
+  annotations:
+    config.kubernetes.io/local-config: "true"
+    internal.kpt.dev/upstream-identifier: '|ConfigMap|default|app-config'
+data:
+  name: mopidy
+  title: Mopidy
+  image-name: mgoltzsche/mopidy-test
+  image-tag: latest
+  port: 8080
+  healthcheck: /healthz

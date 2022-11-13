@@ -1,0 +1,20 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata: # kpt-merge: /data
+  name: data
+  annotations:
+    platforms: linux/arm64/v8,linux/amd64
+    internal.kpt.dev/upstream-identifier: 'skaffold|Config|default|data'
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+  - image: mgoltzsche/mopidy-test # kpt-set: ${image-name}
+    docker:
+      dockerfile: Dockerfile
+  local:
+    push: false
+manifests:
+  kustomize:
+    paths:
+    - ./deploy/default

@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  app.kubernetes.io/name: mopidy # kpt-set: ${name}
+resources:
+- serviceaccount.yaml
+- service.yaml
+- deployment.yaml
+- ingress.yaml

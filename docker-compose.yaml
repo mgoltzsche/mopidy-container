@@ -1,9 +1,7 @@
 version: "3.6"
-
 volumes:
   snapserver-settings:
   snapserver-fifo:
-
 services:
   snapclient:
     image: mgoltzsche/snapcast/snapclient:dev
