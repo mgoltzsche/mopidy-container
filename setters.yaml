@@ -8,9 +8,9 @@ metadata: # kpt-merge: /app-config
     config.kubernetes.io/local-config: "true"
     internal.kpt.dev/upstream-identifier: '|ConfigMap|default|app-config'
 data:
+  version: "0.0.0"
   name: mopidy
   title: Mopidy
-  image-name: mgoltzsche/mopidy-test
-  image-tag: latest
   port: 8080
   healthcheck: /healthz
+  image: ghcr.io/mgoltzsche/mopidy

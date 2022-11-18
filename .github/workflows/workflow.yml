@@ -1,0 +1,43 @@
+# TODO: Make downstream projects apply changes within this file.
+# Currently this file must be listed within .kptignore since it is not a KRM file.
+# However, therefore changes within the upstream repo are not propagated down.
+
+name: Build
+on:
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+    - main
+    # Publish `v1.2.3` tags as releases.
+    #tags:
+    #- v*
+    # Build pull request against the `main` branch.
+    #pull_request:
+    #  branches:
+    #  - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Set up qemu
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: all
+    - name: Build container image
+      run: make image
+    - name: Log into GitHub registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      if: github.ref == 'refs/heads/main'
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        semantic_version: 19
+        extra_plugins: |
+          @semantic-release/exec@6.0.3
+          @semantic-release/git@10.0.1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+

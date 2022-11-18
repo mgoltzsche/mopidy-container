@@ -3,13 +3,13 @@ kind: Config
 metadata: # kpt-merge: /data
   name: data
   annotations:
-    platforms: linux/arm64/v8,linux/amd64
     internal.kpt.dev/upstream-identifier: 'skaffold|Config|default|data'
+    kubemate.mgoltzsche.github.com/platforms: linux/arm64/v8,linux/amd64
 build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-  - image: mgoltzsche/mopidy-test # kpt-set: ${image-name}
+  - image: ghcr.io/mgoltzsche/mopidy # kpt-set: ${image}
     docker:
       dockerfile: Dockerfile
   local:
