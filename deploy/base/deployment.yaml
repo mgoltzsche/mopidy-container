@@ -20,7 +20,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: app
-        image: ghcr.io/mgoltzsche/mopidy:0.0.0 # kpt-set: ${image}:${version}
+        image: ghcr.io/mgoltzsche/mopidy:0.2.0 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env: []
         resources:
