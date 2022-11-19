@@ -71,20 +71,25 @@ help: ## Display this help.
 .PHONY: push-image
 push-image: REGISTRY ?= ghcr.io
 push-image: SKAFFOLD_OPTS += --push --platform=$(PLATFORMS) --default-repo=$(REGISTRY)
-push-image: render require-clean-worktree skaffold-build ## Build and push the multi-arch image(s).
+push-image: skaffold-build ## Build and push the multi-arch image(s).
 
 .PHONY: binfmt-config
 binfmt-config: ## Enable multi-arch support on the host.
 	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.0.0-7 --reset -p yes
 
 .PHONY: prepare-release ## Build image, update version within manifests.
-prepare-release: image manifest-image render binfmt-config
+prepare-release: require-clean-worktree manifest-image binfmt-config
+	make push-image VERSION=latest REGISTRY=$(REGISTRY) PLATFORMS=$(PLATFORMS)
 
 .PHONY: release
-release: SKAFFOLD_OPTS='-t latest -t $(VERSION) --platform=$(PLATFORMS)'
-release: binfmt-config push-image ## Build and push multi-arch image with given VERSION.
+release: SKAFFOLD_OPTS=-t $(VERSION) --platform=$(PLATFORMS)
+release: require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
 
-manifest-image:
+.PHONY: manifest-image
+manifest-image: set-version render
+
+.PHONY: set-version
+set-version:
 	@[ ! "$(VERSION)" = '' ] || (echo no VERSION specified >&2; false)
 	$(DOCKER) run --rm -v "$$PWD":/workdir -u "`id -u`:`id -g`" -e VERSION mikefarah/yq:4.29.2 -i '.data.version = env(VERSION)' setters.yaml
 
