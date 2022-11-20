@@ -4,18 +4,23 @@ metadata: # kpt-merge: /blueprint
   name: mopidy # kpt-set: ${name}
   annotations:
     kubemate.mgoltzsche.github.com/nav-title: "Mopidy" # kpt-set: ${title}
-    #kubemate.mgoltzsche.github.com/rewrite-target: /
-
     internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|blueprint'
 spec:
   ingressClassName: kubemate
   rules:
   - http:
       paths:
+      - path: /iris/
+        pathType: Prefix
+        backend:
+          service:
+            name: mopidy # kpt-set: ${name}
+            port:
+              number: 6680 # kpt-set: ${port}
       - path: /mopidy/ # kpt-set: /${name}/
         pathType: Prefix
         backend:
           service:
             name: mopidy # kpt-set: ${name}
             port:
-              number: 8080 # kpt-set: ${port}
+              number: 6680 # kpt-set: ${port}

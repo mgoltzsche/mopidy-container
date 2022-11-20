@@ -7,9 +7,14 @@ metadata: # kpt-merge: /blueprint
 spec:
   type: ClusterIP
   ports:
-  - port: 8080 # kpt-set: ${port}
-    targetPort: 8080 # kpt-set: ${port}
+  - port: 6680 # kpt-set: ${port}
+    targetPort: 6680 # kpt-set: ${port}
     protocol: TCP
     name: http
+  # TODO: expose mpd port
+  - port: 6680 # kpt-set: ${port}
+    targetPort: 6680 # kpt-set: ${port}
+    protocol: TCP
+    name: mpd
   selector:
     app.kubernetes.io/component: webapp

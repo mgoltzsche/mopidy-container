@@ -11,6 +11,6 @@ data:
   version: "0.2.1"
   name: mopidy
   title: Mopidy
-  port: 8080
-  healthcheck: /healthz
+  port: 6680
+  healthcheck: /mopidy
   image: ghcr.io/mgoltzsche/mopidy
