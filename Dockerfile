@@ -11,7 +11,9 @@ RUN set -ex; \
 	mkdir -m2755 /snapserver; \
 	chown mopidy:snapserver /snapserver
 USER mopidy:audio
-ENV MOPIDY_OUTPUT_PIPE=
+ENV MOPIDY_OUTPUT_PIPE= \
+	MOPIDY_OUTPUT_PIPE_CREATE=false \
+	MOPIDY_SNAPCAST_PORT=1780
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 HEALTHCHECK --interval=5s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/

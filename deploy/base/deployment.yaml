@@ -20,6 +20,19 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 10
+      securityContext:
+        fsGroup: 4242
+      initContainers:
+      - name: init-volume
+        image: alpine:3
+        command:
+        - chown
+        - -R
+        - 4242:4242
+        - /var/lib/mopidy
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mopidy
       containers:
       - name: app
         image: ghcr.io/mgoltzsche/mopidy:0.2.2 # kpt-set: ${image}:${version}
@@ -51,3 +64,10 @@ spec:
           periodSeconds: 3
           successThreshold: 1
           timeoutSeconds: 2
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mopidy
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mopidy-data

@@ -4,18 +4,30 @@ set -eu
 
 : ${MOPIDY_MPD_PASSWORD:=}
 : ${MOPIDY_OUTPUT_PIPE}
+: ${MOPIDY_OUTPUT_PIPE_CREATE}
 
 TMP_MOPIDY_CONF=/tmp/mopidy.conf
 echo > $TMP_MOPIDY_CONF
 
-if [ "$MOPIDY_OUTPUT_PIPE" ] && [ ! -p "$MOPIDY_OUTPUT_PIPE" ]; then
-	echo "Creating PCM audio output pipe at $MOPIDY_OUTPUT_PIPE"
-	mkfifo -m 640 "$MOPIDY_OUTPUT_PIPE"
+if [ "$MOPIDY_OUTPUT_PIPE" ]; then
+	if [ "$MOPIDY_OUTPUT_PIPE_CREATE" = true ] && [ ! -p "$MOPIDY_OUTPUT_PIPE" ]; then
+		echo "Creating PCM audio output pipe at $MOPIDY_OUTPUT_PIPE"
+		mkfifo -m 640 "$MOPIDY_OUTPUT_PIPE"
+	fi
 	cat >> $TMP_MOPIDY_CONF <<-EOF
 		[audio]
 		output = audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_OUTPUT_PIPE
 	EOF
 fi
+
+# Configure iris web UI.
+# See https://github.com/jaedb/Iris/wiki/Getting-started#configuration
+cat >> $TMP_MOPIDY_CONF <<-EOF
+	[iris]
+	data_dir = /var/lib/mopidy/iris
+	snapcast_host = ${HOSTNAME}
+	snapcast_port = ${MOPIDY_SNAPCAST_PORT}
+EOF
 
 cat >> $TMP_MOPIDY_CONF <<-EOF
 	[mpd]

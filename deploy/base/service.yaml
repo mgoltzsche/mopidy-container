@@ -12,8 +12,8 @@ spec:
     protocol: TCP
     name: http
   # TODO: expose mpd port
-  - port: 6680 # kpt-set: ${port}
-    targetPort: 6680 # kpt-set: ${port}
+  - port: 6600
+    targetPort: 6600
     protocol: TCP
     name: mpd
   selector:

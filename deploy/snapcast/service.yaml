@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata: # kpt-merge: /snapcast
+  name: snapcast
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|Service|default|snapcast'
+spec:
+  type: ClusterIP
+  ports:
+  - port: 1780
+    targetPort: 1780
+    protocol: TCP
+    name: http
+  - port: 1705
+    targetPort: 1705
+    protocol: TCP
+    name: rpc
+  - port: 1704
+    targetPort: 1704
+    protocol: TCP
+    name: stream
+  selector:
+    app.kubernetes.io/component: webapp

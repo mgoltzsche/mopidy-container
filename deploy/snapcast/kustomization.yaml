@@ -3,8 +3,8 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: mopidy # kpt-set: ${name}
 resources:
-- persistentvolumeclaim.yaml
-- serviceaccount.yaml
+- ../base
+- https://github.com/mgoltzsche/snapcast-container.git/deploy/snapclient-ingress?ref=v0.3.0
 - service.yaml
-- deployment.yaml
-- ingress.yaml
+patchesStrategicMerge:
+- deployment-patch.yaml
