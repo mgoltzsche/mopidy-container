@@ -11,10 +11,9 @@ spec:
       - name: init-snapfifo
         image: alpine:3
         command:
-        - mkfifo
-        - -m
-        - "640"
-        - /snapserver/snapfifo
+        - /bin/sh
+        - -c
+        - "[ -p /snapserver/snapfifo ] || mkfifo -m 640 /snapserver/snapfifo"
         volumeMounts:
         - name: snapfifo
           mountPath: /snapserver
