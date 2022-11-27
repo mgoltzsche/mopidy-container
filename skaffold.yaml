@@ -4,7 +4,6 @@ metadata: # kpt-merge: /data
   name: data
   annotations:
     internal.kpt.dev/upstream-identifier: 'skaffold|Config|default|data'
-    kubemate.mgoltzsche.github.com/platforms: linux/arm64/v8,linux/amd64
 build:
   tagPolicy:
     gitCommit: {}
@@ -14,8 +13,16 @@ build:
       dockerfile: Dockerfile
   local:
     push: false
-    useBuildkit: true
 manifests:
   kustomize:
     paths:
     - ./deploy/default
+profiles:
+- name: release
+  build:
+    platforms:
+    - linux/arm64/v8
+    - linux/amd64
+    local:
+      push: true
+      useBuildkit: true

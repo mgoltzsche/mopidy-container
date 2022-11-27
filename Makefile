@@ -4,16 +4,11 @@
 
 KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.21
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold/v2:v2.0.0-beta1
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.0.2
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
 DOCKER ?= docker
-PLATFORM_ARCH = $(shell uname -m | sed -E 's!x86_64!amd64!')
-PLATFORM_OS = $(shell uname -o | sed -E 's!GNU/(Linux)!\1!' | tr '[:upper:]' '[:lower:]')
-PLATFORM ?= $(PLATFORM_OS)/$(PLATFORM_ARCH)
-PLATFORMS = $(shell grep kubemate.mgoltzsche.github.com/platforms: skaffold.yaml | sed -E 's!\s+kubemate.mgoltzsche.github.com/platforms: +!!')
-DRY_RUN ?= false
 
 .PHONY: all
 all: image
@@ -70,7 +65,7 @@ help: ## Display this help.
 
 .PHONY: push-image
 push-image: REGISTRY ?= ghcr.io
-push-image: SKAFFOLD_OPTS += --push --platform=$(PLATFORMS) --default-repo=$(REGISTRY)
+push-image: SKAFFOLD_OPTS += --profile=release --default-repo=$(REGISTRY)
 push-image: skaffold-build ## Build and push the multi-arch image(s).
 
 .PHONY: binfmt-config
@@ -78,20 +73,23 @@ binfmt-config: ## Enable multi-arch support on the host.
 	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.0.0-7 --reset -p yes
 
 .PHONY: prepare-release ## Build image, update version within manifests.
-prepare-release: require-clean-worktree manifest-image binfmt-config
-	make push-image VERSION=latest REGISTRY=$(REGISTRY) PLATFORMS=$(PLATFORMS)
+prepare-release: require-version require-clean-worktree manifest-image binfmt-config
+	make push-image VERSION=latest REGISTRY=$(REGISTRY)
 
 .PHONY: release
-release: SKAFFOLD_OPTS=-t $(VERSION) --platform=$(PLATFORMS)
-release: require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
+release: SKAFFOLD_OPTS=-t '$(VERSION)'
+release: require-version require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
 
 .PHONY: manifest-image
 manifest-image: set-version render
 
 .PHONY: set-version
-set-version:
-	@[ ! "$(VERSION)" = '' ] || (echo no VERSION specified >&2; false)
+set-version: require-version
 	$(DOCKER) run --rm -v "$$PWD":/workdir -u "`id -u`:`id -g`" -e VERSION mikefarah/yq:4.29.2 -i '.data.version = env(VERSION)' setters.yaml
+
+.PHONY: require-version
+require-version:
+	@[ ! "$(VERSION)" = '' ] || (echo no VERSION specified >&2; false)
 
 .PHONY: require-clean-worktree
 require-clean-worktree:
