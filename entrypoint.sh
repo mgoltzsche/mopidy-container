@@ -16,6 +16,13 @@ if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
 		mkfifo -m 640 "$MOPIDY_AUDIO_OUTPUT_PIPE"
 	fi
 	MOPIDY_AUDIO_OUTPUT="audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_AUDIO_OUTPUT_PIPE"
+	if [ "${MOPIDY_AUDIO_OUTPUT_PIPE_GENERATE_SOUND:-true}" = true ]; then
+		(
+			sleep 9
+			sox -V -r 48000 -n -b 16 -c 2 /tmp/start.wav synth 3 sin 0+15000 sin 1000+80000 vol -10db remix 1,2 channels 2 &&
+			cat /tmp/start.wav > "$MOPIDY_AUDIO_OUTPUT_PIPE"
+		) &
+	fi
 fi
 
 TMP_MOPIDY_CONF=/tmp/mopidy.conf
