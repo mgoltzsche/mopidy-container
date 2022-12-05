@@ -2,34 +2,33 @@
 
 set -eu
 
-: ${MOPIDY_MPD_PASSWORD:=}
-: ${MOPIDY_OUTPUT_PIPE}
-: ${MOPIDY_OUTPUT_PIPE_CREATE}
+: ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443,https://localhost:8443,https://localhost}
+: ${MOPIDY_SNAPCAST_PORT:=1780}
 
-TMP_MOPIDY_CONF=/tmp/mopidy.conf
-echo > $TMP_MOPIDY_CONF
-
-if [ "$MOPIDY_OUTPUT_PIPE" ]; then
-	if [ "$MOPIDY_OUTPUT_PIPE_CREATE" = true ] && [ ! -p "$MOPIDY_OUTPUT_PIPE" ]; then
-		echo "Creating PCM audio output pipe at $MOPIDY_OUTPUT_PIPE"
-		mkfifo -m 640 "$MOPIDY_OUTPUT_PIPE"
-	fi
-	cat >> $TMP_MOPIDY_CONF <<-EOF
-		[audio]
-		output = audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_OUTPUT_PIPE
-	EOF
+if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
+	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
+	echo "Generated MPD password: $MOPIDY_MPD_PASSWORD" >&2
 fi
 
-# Configure iris web UI.
-# See https://github.com/jaedb/Iris/wiki/Getting-started#configuration
-cat >> $TMP_MOPIDY_CONF <<-EOF
+if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
+	if [ ! -p "$MOPIDY_AUDIO_OUTPUT_PIPE" ]; then
+		echo "Creating PCM audio output pipe at $MOPIDY_AUDIO_OUTPUT_PIPE"
+		mkfifo -m 640 "$MOPIDY_AUDIO_OUTPUT_PIPE"
+	fi
+	MOPIDY_AUDIO_OUTPUT="audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_AUDIO_OUTPUT_PIPE"
+fi
+
+TMP_MOPIDY_CONF=/tmp/mopidy.conf
+
+cat > $TMP_MOPIDY_CONF <<-EOF
+	[http]
+	allowed_origins = $MOPIDY_HTTP_ALLOWED_ORIGINS
+	[audio]
+	output = $MOPIDY_AUDIO_OUTPUT
 	[iris]
 	data_dir = /var/lib/mopidy/iris
-	snapcast_host = ${HOSTNAME}
-	snapcast_port = ${MOPIDY_SNAPCAST_PORT}
-EOF
-
-cat >> $TMP_MOPIDY_CONF <<-EOF
+	snapcast_host = $HOSTNAME
+	snapcast_port = ${MOPIDY_SNAPCAST_PORT:=1780}
 	[mpd]
 	password = $MOPIDY_MPD_PASSWORD
 EOF

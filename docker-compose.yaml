@@ -63,8 +63,7 @@ services:
   mopidy:
     image: mgoltzsche/mopidy:dev
     environment:
-      MOPIDY_OUTPUT_PIPE: /snapserver/snapfifo
-      MOPIDY_OUTPUT_PIPE_CREATE: "true"
+      MOPIDY_AUDIO_OUTPUT_PIPE: /snapserver/snapfifo
     volumes:
     - snapserver-fifo:/snapserver
     ports:

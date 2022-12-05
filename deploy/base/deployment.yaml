@@ -6,6 +6,8 @@ metadata: # kpt-merge: /mopidy
     internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|mopidy'
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   progressDeadlineSeconds: 300
   revisionHistoryLimit: 10
   selector:
@@ -20,16 +22,16 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 10
-      securityContext:
-        fsGroup: 4242
       initContainers:
       - name: init-volume
         image: alpine:3
         command:
-        - chown
-        - -R
-        - 4242:4242
-        - /var/lib/mopidy
+        - /bin/sh
+        - -c
+        - |
+          set -eu
+          mkdir -p /var/lib/mopidy/media
+          chown 100:100 /var/lib/mopidy /var/lib/mopidy/*
         volumeMounts:
         - name: data
           mountPath: /var/lib/mopidy

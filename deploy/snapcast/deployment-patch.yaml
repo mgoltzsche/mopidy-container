@@ -7,25 +7,32 @@ metadata: # kpt-merge: /mopidy
 spec:
   template:
     spec:
+      securityContext:
+        fsGroup: 4242
       initContainers:
       - name: init-snapfifo
         image: alpine:3
         command:
         - /bin/sh
         - -c
-        - "[ -p /snapserver/snapfifo ] || mkfifo -m 640 /snapserver/snapfifo"
+        - |
+          set -eu
+          [ -p /snapserver/snapfifo ] || mkfifo -m 660 /snapserver/snapfifo
+        securityContext:
+          runAsUser: 100 # mopidy
+          runAsGroup: 4242 # snapserver
         volumeMounts:
         - name: snapfifo
           mountPath: /snapserver
       containers:
       - name: snapserver
-        image: ghcr.io/mgoltzsche/snapcast-server:0.3.0
+        image: ghcr.io/mgoltzsche/snapcast-server:0.3.3
         imagePullPolicy: IfNotPresent
         env:
         - name: SNAPSERVER_SOURCE
           value: pipe:///snapserver/snapfifo?name=default&mode=read
-        - name: MOPIDY_SNAPCAST_PORT
-          value: "8080"
+        - name: SNAPSERVER_START_SOUND_ENABLED
+          value: "true"
         resources:
           limits:
             cpu: 200m
@@ -63,8 +70,10 @@ spec:
           mountPath: /var/lib/snapserver
       - name: app
         env:
-        - name: MOPIDY_OUTPUT_PIPE
+        - name: MOPIDY_AUDIO_OUTPUT_PIPE
           value: /snapserver/snapfifo
+        - name: MOPIDY_SNAPCAST_PORT
+          value: "80"
         volumeMounts:
         - name: snapfifo
           mountPath: /snapserver

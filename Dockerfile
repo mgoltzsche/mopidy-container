@@ -1,5 +1,5 @@
 FROM alpine:3.14
-RUN apk add --update --no-cache mopidy py3-pip python3-dev py3-mopidy-youtube
+RUN apk add --update --no-cache mopidy py3-pip python3-dev py3-mopidy-youtube sox openssl ca-certificates
 RUN python3 -m pip install Mopidy-Iris Mopidy-Autoplay Mopidy-MPD \
 	Mopidy-Local Mopidy-YouTube Mopidy-SoundCloud Mopidy-Podcast \
 	Mopidy-SomaFM Mopidy-TuneIn
@@ -11,9 +11,7 @@ RUN set -ex; \
 	mkdir -m2755 /snapserver; \
 	chown mopidy:snapserver /snapserver
 USER mopidy:audio
-ENV MOPIDY_OUTPUT_PIPE= \
-	MOPIDY_OUTPUT_PIPE_CREATE=false \
-	MOPIDY_SNAPCAST_PORT=1780
+ENV MOPIDY_MPD_PASSWORD=generate
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 HEALTHCHECK --interval=5s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/

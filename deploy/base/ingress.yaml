@@ -4,6 +4,7 @@ metadata: # kpt-merge: /blueprint
   name: mopidy # kpt-set: ${name}
   annotations:
     kubemate.mgoltzsche.github.com/nav-title: "Mopidy" # kpt-set: ${title}
+    kubemate.mgoltzsche.github.com/nav-icon: assets/favicon.png
     internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|blueprint'
 spec:
   ingressClassName: kubemate
