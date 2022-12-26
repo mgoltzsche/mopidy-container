@@ -37,7 +37,7 @@ spec:
           mountPath: /var/lib/mopidy
       containers:
       - name: app
-        image: ghcr.io/mgoltzsche/mopidy:0.3.5 # kpt-set: ${image}:${version}
+        image: ghcr.io/mgoltzsche/mopidy:0.4.0 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env: []
         resources:
