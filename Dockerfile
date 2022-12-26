@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.17
 RUN apk add --update --no-cache mopidy py3-pip python3-dev py3-mopidy-youtube sox openssl ca-certificates
 RUN python3 -m pip install Mopidy-Iris Mopidy-Autoplay Mopidy-MPD \
 	Mopidy-Local Mopidy-YouTube Mopidy-SoundCloud Mopidy-Podcast \
