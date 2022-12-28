@@ -26,7 +26,7 @@ spec:
           mountPath: /snapserver
       containers:
       - name: snapserver
-        image: ghcr.io/mgoltzsche/snapcast-server:0.3.5
+        image: ghcr.io/mgoltzsche/snapcast-server:0.4.1
         imagePullPolicy: IfNotPresent
         env:
         - name: SNAPSERVER_SOURCE
