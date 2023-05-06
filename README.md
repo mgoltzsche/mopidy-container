@@ -1,4 +1,4 @@
-# Mopidy and Snapcast docker compose
+# Mopidy and Snapcast
 
 This repo aims to provide an opinionated, containerized bundle of [Mopidy](https://github.com/mopidy/mopidy) and [Snapcast](https://github.com/badaix/snapcast) that runs on both an amd64 linux machine and a Raspberry Pi.  
 
