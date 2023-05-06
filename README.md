@@ -10,7 +10,7 @@ To list the supported targets, run `make help`.
 
 * git
 * make
-* [docker 1.20+](https://docs.docker.com/engine/install/)
+* [docker 20+](https://docs.docker.com/engine/install/)
 * [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
 ### Build the application

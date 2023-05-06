@@ -4,7 +4,7 @@ commonLabels:
   app.kubernetes.io/name: mopidy # kpt-set: ${name}
 resources:
 - ../base
-- https://github.com/mgoltzsche/snapcast-container.git/deploy/snapclient-ingress?ref=v0.4.1
+- https://github.com/mgoltzsche/snapcast-container.git/deploy/snapclient-ingress?ref=v0.5.0
 - service.yaml
 patchesStrategicMerge:
 - deployment-patch.yaml

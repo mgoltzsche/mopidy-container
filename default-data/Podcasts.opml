@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.1">
+  <head>
+    <title>Sample Podcast collection</title>
+    <dateModified>Sun, 30 Apr 2023 23:23:23 GMT</dateModified>
+  </head>
+  <body>
+    <outline text="Podcast">
+      <outline text="Critical Podcast" title="Critical Podcast" type="rss" xmlUrl="https://criticalmusic.com/podcast/CriticalPodcast.xml" htmlUrl="https://criticalmusic.com/"/>
+      <outline text="Tagesschau Podcast" title="Tagesschau Podcast" type="rss" xmlUrl="https://www.tagesschau.de/multimedia/sendung/tagesschau_20_uhr/podcast-ts2000-audio-100~podcast.xml" htmlUrl="https://www.tagesschau.de"/>
+      <outline text="Chaosradio" title="Chaosradio" type="rss" xmlUrl="https://chaosradio.de/feed/m4a" htmlUrl="https://chaosradio.de/"/>
+    </outline>
+  </body>
+</opml>

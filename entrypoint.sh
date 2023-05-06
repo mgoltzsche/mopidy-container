@@ -2,8 +2,18 @@
 
 set -eu
 
-: ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443,https://localhost:8443,https://localhost}
-: ${MOPIDY_SNAPCAST_PORT:=1780}
+: ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443}
+: ${MOPIDY_IRIS_SNAPCAST_HOST:=$HOSTNAME}
+
+DATA_DIRS='/var/lib/mopidy/autoplay /var/lib/mopidy/local/playlists /var/lib/mopidy/media'
+mkdir -p $DATA_DIRS
+chown mopidy:audio $DATA_DIRS
+if [ ! -d /var/lib/mopidy/playlists ]; then
+	mkdir /var/lib/mopidy/playlists
+	cp /etc/mopidy/default-data/playlist.m3u8 /var/lib/mopidy/playlists/
+fi
+
+# Generate mopidy config
 
 if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
 	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
@@ -25,20 +35,25 @@ if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
 	fi
 fi
 
-TMP_MOPIDY_CONF=/tmp/mopidy.conf
-
-cat > $TMP_MOPIDY_CONF <<-EOF
+cat > /tmp/mopidy.conf <<-EOF
 	[http]
 	allowed_origins = $MOPIDY_HTTP_ALLOWED_ORIGINS
 	[audio]
 	output = $MOPIDY_AUDIO_OUTPUT
 	[iris]
-	data_dir = /var/lib/mopidy/iris
-	snapcast_host = $HOSTNAME
-	snapcast_port = ${MOPIDY_SNAPCAST_PORT:=1780}
+	snapcast_host = $MOPIDY_IRIS_SNAPCAST_HOST
+	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
 	password = $MOPIDY_MPD_PASSWORD
 EOF
 
-echo "Launching Mopidy"
-exec mopidy --config /etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:$TMP_MOPIDY_CONF ${MOPIDY_OPTS:-} "$@"
+MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
+
+if [ ! -f /var/lib/mopidy/.local-scanned ]; then
+	echo 'Scanning media directory for audio files'
+	mopidy --config $MOPIDY_CONF local scan
+	touch /var/lib/mopidy/.local-scanned
+fi
+
+echo 'Launching Mopidy'
+mopidy --config $MOPIDY_CONF ${MOPIDY_OPTS:-} "$@" || (sleep 1; false)
