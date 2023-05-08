@@ -45,6 +45,19 @@ cat > /tmp/mopidy.conf <<-EOF
 	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
 	password = $MOPIDY_MPD_PASSWORD
+	[youtube]
+	enabled = ${MOPIDY_YOUTUBE_ENABLED:-true}
+	autoplay_enabled = ${MOPIDY_YOUTUBE_AUTOPLAY_ENABLED:-true}
+	strict_autoplay = ${MOPIDY_YOUTUBE_AUTOPLAY_STRICT:-true}
+	max_autoplay_length = ${MOPIDY_YOUTUBE_AUTOPLAY_MAX_TRACK_SECONDS:-600}
+	max_degrees_of_separation = ${MOPIDY_YOUTUBE_AUTOPLAY_MAX_DISTANCE:-3}
+	api_enabled = ${MOPIDY_YOUTUBE_API_ENABLED:-true}
+	youtube_api_key = ${MOPIDY_YOUTUBE_API_KEY:-}
+	musicapi_enabled = ${MOPIDY_YOUTUBE_MUSICAPI_ENABLED:-false}
+	channel_id = ${MOPIDY_YOUTUBE_MUSICAPI_CHANNEL:-UCYwjcFiUg8PpWM45vpBUc3Q}
+	musicapi_cookie = ${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}
+	search_results = ${MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS:-15}
+	playlist_max_videos = ${MOPIDY_YOUTUBE_MAX_VIDEOS:-20}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf

@@ -39,7 +39,23 @@ spec:
       - name: app
         image: ghcr.io/mgoltzsche/mopidy:0.5.0 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
-        env: []
+        env:
+        - name: MOPIDY_YOUTUBE_ENABLED
+          value: "true"
+        - name: MOPIDY_YOUTUBE_API_ENABLED
+          value: "true"
+        - name: MOPIDY_YOUTUBE_API_KEY
+          value: ""
+        - name: MOPIDY_YOUTUBE_MUSICAPI_ENABLED
+          value: "false"
+        - name: MOPIDY_YOUTUBE_MUSICAPI_COOKIE
+          value: ""
+        - name: MOPIDY_YOUTUBE_MUSICAPI_CHANNEL
+          value: UCYwjcFiUg8PpWM45vpBUc3Q
+        - name: MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS
+          value: "15"
+        - name: MOPIDY_YOUTUBE_MAX_VIDEOS
+          value: "20"
         resources:
           limits:
             cpu: 200m

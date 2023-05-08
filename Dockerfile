@@ -1,19 +1,15 @@
 FROM alpine:3.17
-RUN apk add --update --no-cache mopidy py3-pip python3-dev sox openssl ca-certificates gst-plugins-bad
+RUN apk add --update --no-cache mopidy py3-pip python3-dev sox openssl ca-certificates gst-plugins-bad git
 RUN python3 -m pip install Mopidy-Iris Mopidy-Autoplay Mopidy-MPD \
-	Mopidy-Local Mopidy-YouTube ytmusicapi Mopidy-YTMusic Mopidy-SoundCloud Mopidy-Podcast \
+	Mopidy-Local ytmusicapi Mopidy-YTMusic Mopidy-SoundCloud Mopidy-Podcast \
 	Mopidy-SomaFM Mopidy-TuneIn
-#RUN set -ex; \
-#	wget -O /tmp/ffmpeg.tar.xz https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
-#	tar -xzf /tmp/ffmpeg.tar.xz -C /tmp/ffmpeg
+
+# Using patched version, see https://github.com/natumbri/mopidy-youtube/issues/241
+ARG MOPIDY_YOUTUBE_PLUGIN_VERSION=1091d3b7de79f3c9b1c8ff8e5f670f91896f0fa2
+RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-youtube@${MOPIDY_YOUTUBE_PLUGIN_VERSION}
 
 ARG YTDLP_VERSION=2023.03.04
 RUN python3 -m pip install https://github.com/yt-dlp/yt-dlp/archive/${YTDLP_VERSION}.tar.gz
-#ARG YTDLP_VERSION=b423b6a48e0b19260bc95ab7d72d2138d7f124dc
-#RUN apk add --update --no-cache git
-#RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@${YTDLP_VERSION}
-#RUN yt-dlp --version && false
-#RUN apk add --update --no-cache gstreamer gstreamer-lang gstreamer-vaapi gst-plugins-bad-dev gst-plugins-base-dev
 
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \
