@@ -58,6 +58,9 @@ cat > /tmp/mopidy.conf <<-EOF
 	musicapi_cookie = ${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}
 	search_results = ${MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS:-15}
 	playlist_max_videos = ${MOPIDY_YOUTUBE_MAX_VIDEOS:-20}
+	[party]
+	votes_to_skip = ${MOPIDY_PARTY_VOTES_TO_SKIP:-3}
+	max_tracks = ${MOPIDY_PARTY_MAX_TRACKS:-5}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf

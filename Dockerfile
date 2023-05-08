@@ -2,7 +2,7 @@ FROM alpine:3.17
 RUN apk add --update --no-cache mopidy py3-pip python3-dev sox openssl ca-certificates gst-plugins-bad git
 RUN python3 -m pip install Mopidy-Iris Mopidy-Autoplay Mopidy-MPD \
 	Mopidy-Local ytmusicapi Mopidy-YTMusic Mopidy-SoundCloud Mopidy-Podcast \
-	Mopidy-SomaFM Mopidy-TuneIn
+	Mopidy-SomaFM Mopidy-TuneIn Mopidy-Party
 
 # Using patched version, see https://github.com/natumbri/mopidy-youtube/issues/241
 ARG MOPIDY_YOUTUBE_PLUGIN_VERSION=1091d3b7de79f3c9b1c8ff8e5f670f91896f0fa2
