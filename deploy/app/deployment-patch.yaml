@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mopidy # kpt-set: ${name}
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        envFrom:
+        - secretRef:
+            name: ${APP_CONFIG_SECRET_NAME:=mopidy-defaults} # kpt-set: ${APP_CONFIG_SECRET_NAME:=${name}-defaults}

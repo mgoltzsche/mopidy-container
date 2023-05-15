@@ -1,0 +1,35 @@
+apiVersion: apps.kubemate.mgoltzsche.github.com/v1alpha1
+kind: AppConfigSchema
+metadata:
+  name: mopidy # kpt-set: ${name}
+spec:
+  params:
+  - name: MOPIDY_YOUTUBE_ENABLED
+    title: Use the Youtube Data API
+    type: bool
+    category: Youtube
+  - name: MOPIDY_YOUTUBE_API_KEY
+    title: Youtube Data API Key
+    type: password
+    category: Youtube
+    description: |
+      Register your personal API Key for the Youtube Data API.
+      Obtain it from https://console.cloud.google.com after creating an account and a project.
+  - name: MOPIDY_YOUTUBE_MUSICAPI_ENABLED
+    title: Use Youtube Music
+    type: bool
+    category: Youtube
+  - name: MOPIDY_MPD_PASSWORD
+    title: MPD password
+    type: password
+    category: MPD
+  - name: MOPIDY_PARTY_VOTES_TO_SKIP
+    title: Votes to skip
+    description: The number of votes needed to skip a track.
+    type: number
+    category: Party
+  - name: MOPIDY_PARTY_MAX_TRACKS
+    title: Maximum number of tracks
+    description: The maximum number of tracks a guest can submit at once.
+    type: number
+    category: Party

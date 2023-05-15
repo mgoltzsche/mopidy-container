@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mopidy-defaults # kpt-set: ${name}-defaults
+  annotations:
+    kubemate.mgoltzsche.github.com/default-config: "true"
+stringData:
+  MOPIDY_MPD_PASSWORD: generate
+  MOPIDY_YOUTUBE_ENABLED: "true"
+  MOPIDY_YOUTUBE_API_ENABLED: "true"
+  MOPIDY_YOUTUBE_MUSICAPI_ENABLED: "false"
+  MOPIDY_YOUTUBE_MUSICAPI_COOKIE: ""
+  MOPIDY_YOUTUBE_MUSICAPI_CHANNEL: UCYwjcFiUg8PpWM45vpBUc3Q
+  MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS: "15"
+  MOPIDY_YOUTUBE_MAX_VIDEOS: "20"
+  MOPIDY_PARTY_VOTES_TO_SKIP: "3"
+  MOPIDY_PARTY_MAX_TRACKS: "5"
