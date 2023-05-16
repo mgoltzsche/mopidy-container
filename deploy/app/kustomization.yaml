@@ -1,7 +1,6 @@
-namespace: kubemate
 resources:
-- appconfigschema.yaml
-- defaults.yaml
+- configschema.yaml
+- defaultconfig.yaml
 - ../default
 patchesStrategicMerge:
 - deployment-patch.yaml

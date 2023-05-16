@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mopidy-defaults # kpt-set: ${name}-defaults
-  annotations:
-    kubemate.mgoltzsche.github.com/default-config: "true"
+  name: ${APP_NAME:=app}-defaultconfig
 stringData:
   MOPIDY_MPD_PASSWORD: generate
   MOPIDY_YOUTUBE_ENABLED: "true"

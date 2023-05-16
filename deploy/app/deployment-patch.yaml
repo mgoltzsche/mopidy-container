@@ -9,4 +9,6 @@ spec:
       - name: app
         envFrom:
         - secretRef:
-            name: ${APP_CONFIG_SECRET_NAME:=mopidy-defaults} # kpt-set: ${APP_CONFIG_SECRET_NAME:=${name}-defaults}
+            name: ${APP_NAME:=app}-defaultconfig
+        - secretRef:
+            name: ${APP_CONFIG_SECRET_NAME:=app-defaultconfig}
