@@ -1,6 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-metadata:
+metadata: # kpt-merge: /mopidy-party
   name: mopidy-party
   annotations:
     kubemate.mgoltzsche.github.com/nav-title: "Mopidy Party"

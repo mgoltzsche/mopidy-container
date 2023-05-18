@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: Secret
-metadata:
+metadata: # kpt-merge: /${APP_NAME:=app}-defaultconfig
   name: ${APP_NAME:=app}-defaultconfig
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|Secret|default|${APP_NAME:=app}-defaultconfig'
 stringData:
   MOPIDY_MPD_PASSWORD: generate
   MOPIDY_YOUTUBE_ENABLED: "true"

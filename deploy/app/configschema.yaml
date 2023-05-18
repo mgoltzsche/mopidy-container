@@ -1,7 +1,9 @@
 apiVersion: apps.kubemate.mgoltzsche.github.com/v1alpha1
 kind: AppConfigSchema
-metadata:
+metadata: # kpt-merge: /${APP_NAME:=app}
   name: ${APP_NAME:=app}
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps.kubemate.mgoltzsche.github.com|AppConfigSchema|default|${APP_NAME:=app}'
 spec:
   params:
   - name: MOPIDY_YOUTUBE_ENABLED
