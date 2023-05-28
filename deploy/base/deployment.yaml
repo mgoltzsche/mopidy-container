@@ -41,7 +41,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            cpu: 200m
+            cpu: 500m
             memory: 1Gi
           requests:
             cpu: 100m
@@ -55,16 +55,18 @@ spec:
             port: 6680 # kpt-set: ${port}
           initialDelaySeconds: 10
           periodSeconds: 10
+          failureThreshold: 3
           successThreshold: 1
-          timeoutSeconds: 2
+          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: "/mopidy" # kpt-set: ${healthcheck}
             port: 6680 # kpt-set: ${port}
           initialDelaySeconds: 1
-          periodSeconds: 3
+          periodSeconds: 5
+          failureThreshold: 5
           successThreshold: 1
-          timeoutSeconds: 2
+          timeoutSeconds: 5
         volumeMounts:
         - name: data
           mountPath: /var/lib/mopidy
