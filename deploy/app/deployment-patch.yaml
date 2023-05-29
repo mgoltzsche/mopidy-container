@@ -7,6 +7,16 @@ metadata: # kpt-merge: /blueprint
 spec:
   template:
     spec:
+      affinity:
+        nodeAffinity:
+          # Force mopidy to run on the master node.
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: In
+                values:
+                - "true"
       containers:
       - name: app
         envFrom:
