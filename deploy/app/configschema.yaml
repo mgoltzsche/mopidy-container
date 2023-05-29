@@ -25,6 +25,26 @@ spec:
     title: Use Youtube Music
     category: Youtube
     type: boolean
+  - name: MOPIDY_YOUTUBE_MUSICAPI_COOKIE
+    title: Youtube Music cookie
+    type: password
+    category: Youtube
+    description: |
+      Provide your Youtube Music cookie here.
+      TODO: Describe how to get it.
+  - name: MOPIDY_YOUTUBE_MUSICAPI_CHANNEL
+    title: Youtube Music channel
+    category: Youtube
+    type: string
+    description: When you configured your Youtube Music cookie, you can specify your private channel here.
+  - name: MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS
+    title: Max. search results
+    category: Youtube
+    type: number
+  - name: MOPIDY_YOUTUBE_MAX_VIDEOS
+    title: Max. video search results
+    category: Youtube
+    type: number
   - name: MOPIDY_MPD_PASSWORD
     title: MPD password
     type: password
