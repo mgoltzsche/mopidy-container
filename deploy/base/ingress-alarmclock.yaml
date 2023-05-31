@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: # kpt-merge: /mopidy-alarmclock
+  name: mopidy-alarmclock
+  annotations:
+    kubemate.mgoltzsche.github.com/nav-title: "Mopidy Alarm Clock"
+    kubemate.mgoltzsche.github.com/nav-icon: ../mopidy/favicon.ico
+    internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|mopidy-alarmclock'
+spec:
+  ingressClassName: kubemate
+  rules:
+  - http:
+      paths:
+      - path: /alarmclock/
+        pathType: Prefix
+        backend:
+          service:
+            name: mopidy # kpt-set: ${name}
+            port:
+              number: 6680 # kpt-set: ${port}

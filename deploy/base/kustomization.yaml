@@ -9,3 +9,4 @@ resources:
 - deployment.yaml
 - ingress.yaml
 - ingress-party.yaml
+- ingress-alarmclock.yaml

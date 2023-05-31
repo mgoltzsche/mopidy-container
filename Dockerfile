@@ -2,7 +2,7 @@ FROM alpine:3.17
 RUN apk add --update --no-cache mopidy py3-pip python3-dev sox openssl ca-certificates gst-plugins-bad git
 RUN python3 -m pip install Mopidy-Iris Mopidy-Autoplay Mopidy-MPD \
 	Mopidy-Local Mopidy-Youtube ytmusicapi Mopidy-YTMusic Mopidy-SoundCloud Mopidy-Podcast \
-	Mopidy-SomaFM Mopidy-TuneIn Mopidy-Party
+	Mopidy-SomaFM Mopidy-TuneIn Mopidy-Party Mopidy-AlarmClock
 
 ARG YTDLP_VERSION=2023.03.04
 RUN python3 -m pip install https://github.com/yt-dlp/yt-dlp/archive/${YTDLP_VERSION}.tar.gz
