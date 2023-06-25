@@ -41,8 +41,8 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            cpu: 500m
-            memory: 1Gi
+            cpu: 700m
+            memory: 2Gi # since it loads entire youtube tracks into memory apparently
           requests:
             cpu: 100m
             memory: 32Mi
