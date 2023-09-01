@@ -20,6 +20,7 @@ RUN set -ex; \
 COPY mopidy.conf /etc/mopidy/mopidy.conf
 COPY default-data/Podcasts.opml /etc/mopidy/podcast/Podcasts.opml
 COPY default-data /etc/mopidy/default-data
+COPY icons /static/icons
 USER mopidy:audio
 ENV MOPIDY_MPD_PASSWORD=generate \
 	MOPIDY_IRIS_SNAPCAST_PORT=443
