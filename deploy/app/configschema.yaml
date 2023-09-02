@@ -30,8 +30,11 @@ spec:
     type: password
     category: Youtube
     description: |
-      Provide your Youtube Music cookie here.
-      TODO: Describe how to get it.
+      To enable Youtube Premium high quality audio, provide your Youtube Music cookies here in the Netscape HTTP Cookie File format.
+      To export such a cookies.txt file, you can use a browser extension:
+      * Firefox: https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/
+      * Chrome: https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc
+      Also see https://github.com/natumbri/mopidy-youtube#configuration
   - name: MOPIDY_YOUTUBE_MUSICAPI_CHANNEL
     title: Youtube Music channel
     category: Youtube
@@ -45,6 +48,35 @@ spec:
     title: Max. video search results
     category: Youtube
     type: number
+  - name: MOPIDY_YOUTUBE_AUTOPLAY_ENABLED
+    title: Autoplay enabled
+    type: boolean
+    category: Youtube
+  - name: MOPIDY_YOUTUBE_AUTOPLAY_STRICT
+    title: Strict autoplay
+    type: boolean
+    category: Youtube
+  - name: MOPIDY_YOUTUBE_AUTOPLAY_MAX_LENGTH
+    title: Maximum length (seconds) of the tracks selected by autoplay
+    type: number
+    category: Youtube
+  - name: MOPIDY_YOUTUBE_AUTOPLAY_MAX_DISTANCE
+    title: Distance of the tracks selected by autoplay
+    type: number
+    category: Youtube
+  # mopidy-ytmusic doesn't work anyway
+  #- name: MOPIDY_YTMUSIC_OAUTH_JSON
+  #  title: Youtube Music OAuth JSON
+  #  type: password
+  #  category: Youtube Music
+  - name: MOPIDY_SOUNDCLOUD_AUTH_TOKEN
+    title: Soundcloud API token
+    type: password
+    category: Soundcloud
+  - name: MOPIDY_SOUNDCLOUD_EXPLORE_SONGS
+    title: Number of songs returned from Soundcloud
+    type: number
+    category: Soundcloud
   - name: MOPIDY_MPD_PASSWORD
     title: MPD password
     type: password
