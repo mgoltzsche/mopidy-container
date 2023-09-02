@@ -35,8 +35,15 @@ if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
 	fi
 fi
 
+if [ "${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}" ]; then
+	# Write Youtube Music cookie to file
+	MOPIDY_YOUTUBE_MUSICAPI_COOKIE_FILE=/tmp/youtube-music-cookie.txt
+	echo "$MOPIDY_YOUTUBE_MUSICAPI_COOKIE" > $MOPIDY_YOUTUBE_MUSICAPI_COOKIE_FILE
+fi
+
 cat > /tmp/mopidy.conf <<-EOF
 	[http]
+	port = ${MOPIDY_HTTP_PORT:-6680}
 	allowed_origins = $MOPIDY_HTTP_ALLOWED_ORIGINS
 	[audio]
 	output = $MOPIDY_AUDIO_OUTPUT
@@ -44,20 +51,26 @@ cat > /tmp/mopidy.conf <<-EOF
 	snapcast_host = $MOPIDY_IRIS_SNAPCAST_HOST
 	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
+	port = ${MOPIDY_MPD_PORT:-6600}
 	password = $MOPIDY_MPD_PASSWORD
 	[youtube]
 	enabled = ${MOPIDY_YOUTUBE_ENABLED:-true}
 	autoplay_enabled = ${MOPIDY_YOUTUBE_AUTOPLAY_ENABLED:-true}
 	strict_autoplay = ${MOPIDY_YOUTUBE_AUTOPLAY_STRICT:-true}
-	max_autoplay_length = ${MOPIDY_YOUTUBE_AUTOPLAY_MAX_TRACK_SECONDS:-600}
+	max_autoplay_length = ${MOPIDY_YOUTUBE_AUTOPLAY_MAX_LENGTH:-600}
 	max_degrees_of_separation = ${MOPIDY_YOUTUBE_AUTOPLAY_MAX_DISTANCE:-3}
 	api_enabled = ${MOPIDY_YOUTUBE_API_ENABLED:-true}
 	youtube_api_key = ${MOPIDY_YOUTUBE_API_KEY:-}
 	musicapi_enabled = ${MOPIDY_YOUTUBE_MUSICAPI_ENABLED:-false}
 	channel_id = ${MOPIDY_YOUTUBE_MUSICAPI_CHANNEL:-UCYwjcFiUg8PpWM45vpBUc3Q}
-	musicapi_cookie = ${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}
+	musicapi_cookiefile = ${MOPIDY_YOUTUBE_MUSICAPI_COOKIE_FILE:-}
 	search_results = ${MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS:-15}
 	playlist_max_videos = ${MOPIDY_YOUTUBE_MAX_VIDEOS:-20}
+	[ytmusic]
+	oauth_json = ${MOPIDY_YTMUSIC_OAUTH_JSON:-}
+	[soundcloud]
+	auth_token = ${MOPIDY_SOUNDCLOUD_AUTH_TOKEN:-}
+	explore_songs = ${MOPIDY_SOUNDCLOUD_EXPLORE_SONGS:-25}
 	[party]
 	votes_to_skip = ${MOPIDY_PARTY_VOTES_TO_SKIP:-3}
 	max_tracks = ${MOPIDY_PARTY_MAX_TRACKS:-5}
