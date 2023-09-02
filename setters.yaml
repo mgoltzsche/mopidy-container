@@ -8,7 +8,7 @@ metadata: # kpt-merge: /app-config
     config.kubernetes.io/local-config: "true"
     internal.kpt.dev/upstream-identifier: '|ConfigMap|default|app-config'
 data:
-  version: "0.8.0"
+  version: "0.8.1"
   name: mopidy
   title: Mopidy
   port: 6680
