@@ -26,7 +26,7 @@ deploy: skaffold-run ## Deploy the application into the selected cluster.
 undeploy: skaffold-delete ## Undeploy the debug application.
 
 .PHONY: debug
-debug: SKAFFOLD_OPTS = --auto-build
+debug: SKAFFOLD_OPTS += --auto-build
 debug: skaffold-debug ## Deploy the application in debug mode.
 
 ##@ Development
@@ -48,7 +48,7 @@ kpt-pkg-update:
 		-v `pwd`:/data -w /data \
 		$(KPT_IMAGE) pkg update --strategy=$(KPT_PKG_UPDATE_STRATEGY) .
 
-skaffold-debug skaffold-dev: DOCKER_RUN_OPTS = -ti
+skaffold-debug skaffold-dev: DOCKER_RUN_OPTS += -ti
 skaffold-debug skaffold-dev skaffold-run skaffold-stop skaffold-delete: DOCKER_RUN_OPTS += --mount "type=bind,src=$(KUBECONFIG),dst=/tmp/.kube/config,ro"
 skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-debug skaffold-survey skaffold-help: skaffold-%:
 	mkdir -p $$HOME/.docker
