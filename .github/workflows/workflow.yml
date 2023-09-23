@@ -1,43 +1,65 @@
 # TODO: Make downstream projects apply changes within this file.
 # Currently this file must be listed within .kptignore since it is not a KRM file.
 # However, therefore changes within the upstream repo are not propagated down.
+name: Build and release
 
-name: Build
 on:
   push:
-    # Publish `main` as Docker `latest` image.
     branches:
     - main
-    # Publish `v1.2.3` tags as releases.
-    #tags:
-    #- v*
-    # Build pull request against the `main` branch.
-    #pull_request:
-    #  branches:
-    #  - main
+  pull_request:
+    branches:
+    - main
+
+concurrency: # Run release builds sequentially, cancel outdated PR builds
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions: # Grant write access to github.token within non-pull_request builds
+  contents: write
+
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
+
     steps:
     - name: Check out code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - id: release
+      name: Prepare release
+      uses: mgoltzsche/conventional-release@v0
+      with:
+        commit-files: ./deploy
+        ignore-commits-before: cc90dd7dcdaa7746a104068c79ec9d7a62734308
+
     - name: Set up qemu
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: all
-    - name: Build container image
-      run: make image
-    - name: Log into GitHub registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      if: github.ref == 'refs/heads/main'
-    - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        semantic_version: 19
-        extra_plugins: |
-          @semantic-release/exec@6.0.3
-          @semantic-release/git@10.0.1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Build
+      if: '!steps.release.outputs.publish'
+      run: |
+        make
+
+    - name: Log into GitHub Container Registry
+      if: steps.release.outputs.publish
+      run: echo "${{ github.token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push container image
+      if: steps.release.outputs.publish
+      run: |
+        set -u
+        make release VERSION=$RELEASE_VERSION
+
+    - name: Replace image version within manifests
+      if: steps.release.outputs.publish
+      run: |
+        set -u
+        make manifest-image VERSION=$RELEASE_VERSION
 

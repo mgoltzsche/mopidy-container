@@ -4,7 +4,7 @@
 
 KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.32
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.4.1
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.7.1
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
@@ -71,15 +71,12 @@ push-image: skaffold-build ## Build and push the multi-arch image(s).
 
 .PHONY: binfmt-config
 binfmt-config: ## Enable multi-arch support on the host.
-	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.0.0-7 --reset -p yes
+	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.2.0-1 --reset -p yes
 
-.PHONY: prepare-release ## Build image, update version within manifests.
-prepare-release: require-version require-clean-worktree manifest-image binfmt-config
+.PHONY: release ## Build and push multi-arch image
+release: SKAFFOLD_OPTS += -t '$(VERSION)'
+release: require-version require-clean-worktree manifest-image binfmt-config push-image
 	make push-image VERSION=latest REGISTRY=$(REGISTRY)
-
-.PHONY: release
-release: SKAFFOLD_OPTS=-t '$(VERSION)'
-release: require-version require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
 
 .PHONY: manifest-image
 manifest-image: set-version render
