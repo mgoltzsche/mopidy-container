@@ -26,3 +26,8 @@ profiles:
     local:
       push: true
       useBuildkit: true
+- name: dev
+  manifests:
+    kustomize:
+      paths:
+      - ./deploy/dev

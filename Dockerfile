@@ -1,11 +1,11 @@
 FROM alpine:3.17
-RUN apk add --update --no-cache mopidy py3-pip python3-dev sox openssl ca-certificates gst-plugins-bad git
+RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git
 RUN python3 -m pip install \
+	Mopidy==3.4.1 \
 	Mopidy-Iris==3.68.0 \
 	Mopidy-Autoplay==0.2.3 \
 	Mopidy-MPD==3.3.0 \
 	Mopidy-Local==3.2.1 \
-	Mopidy-Youtube==3.7 \
 	yt-dlp==2023.7.6 \
 	ytmusicapi==1.2.1 \
 	Mopidy-SoundCloud==3.0.2 \
@@ -15,7 +15,15 @@ RUN python3 -m pip install \
 	Mopidy-Party==1.2.1 \
 	Mopidy-AlarmClock==0.1.9
 
-# Install Mopidy-YTMusic from fork that supports newer ytmusicapi version than 0.23.0 - doesn't work anyway, unfortunately
+# Mopidy-Youtube==3.7
+ARG MOPIDY_YOUTUBE_VERSION=c76815ffedb9f119d1d9129645efc85865f5b4b7 # 3.7 + ytmusicapi auth patch
+RUN python3 -m pip install git+https://github.com/natumbri/mopidy-youtube.git@$MOPIDY_YOUTUBE_VERSION
+
+ARG YTDLP_VERSION=c1d71d0d9f41db5e4306c86af232f5f6220a130b
+RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
+
+# Install Mopidy-YTMusic from fork that supports newer pytube version.
+# Unfortunately, that did not help.
 # See https://github.com/OzymandiasTheGreat/mopidy-ytmusic/issues/41
 #ARG MOPIDY_YTMUSIC_VERSION=c60055bc4cbc35534ef4c141fc883928bf5ca280 # 0.3.8 + pytube patch
 #RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
@@ -26,11 +34,11 @@ RUN python3 -m pip install \
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \
 	mkdir -p /etc/mopidy/podcast /config; \
+	adduser -Su 100 -G audio -h /var/lib/mopidy mopidy mopidy; \
 	addgroup -g 4242 snapserver; \
 	addgroup mopidy snapserver; \
 	mkdir -m2755 /snapserver; \
 	chown mopidy:snapserver /snapserver; \
-	rm /etc/mopidy/mopidy.conf; \
 	touch /IS_CONTAINER; \
 	ln -s /etc/mopidy/mopidy.conf /config/mopidy.conf
 COPY mopidy.conf /etc/mopidy/mopidy.conf
@@ -39,6 +47,6 @@ COPY default-data /etc/mopidy/default-data
 USER mopidy:audio
 ENV MOPIDY_MPD_PASSWORD=generate \
 	MOPIDY_IRIS_SNAPCAST_PORT=443
-COPY entrypoint.sh /
+COPY entrypoint.sh ytmusicapi-login.py /
 ENTRYPOINT [ "/entrypoint.sh" ]
 HEALTHCHECK --interval=5s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/

@@ -41,9 +41,20 @@ if [ "${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}" ]; then
 	echo "$MOPIDY_YOUTUBE_MUSICAPI_COOKIE" > $MOPIDY_YOUTUBE_MUSICAPI_COOKIE_FILE
 fi
 
+if [ "${MOPIDY_YOUTUBE_MUSICAPI_AUTH_HEADERS:-}" ]; then
+	# Generate ytmusicapi browser.json from authenticated HTTP request's headers
+	export MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE=/tmp/ytmusicapi-browser.json
+	echo "Generating $MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE from MOPIDY_YOUTUBE_MUSICAPI_AUTH_HEADERS"
+	python3 /ytmusicapi-login.py
+fi
+
+if [ "${MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH:-}" ]; then
+	MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE=/tmp/ytmusicapi-browser.json
+	echo "$MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH" > $MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE
+fi
+
 cat > /tmp/mopidy.conf <<-EOF
 	[http]
-	port = ${MOPIDY_HTTP_PORT:-6680}
 	allowed_origins = $MOPIDY_HTTP_ALLOWED_ORIGINS
 	[audio]
 	output = $MOPIDY_AUDIO_OUTPUT
@@ -51,7 +62,6 @@ cat > /tmp/mopidy.conf <<-EOF
 	snapcast_host = $MOPIDY_IRIS_SNAPCAST_HOST
 	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
-	port = ${MOPIDY_MPD_PORT:-6600}
 	password = $MOPIDY_MPD_PASSWORD
 	[youtube]
 	enabled = ${MOPIDY_YOUTUBE_ENABLED:-true}
@@ -62,8 +72,9 @@ cat > /tmp/mopidy.conf <<-EOF
 	api_enabled = ${MOPIDY_YOUTUBE_API_ENABLED:-true}
 	youtube_api_key = ${MOPIDY_YOUTUBE_API_KEY:-}
 	musicapi_enabled = ${MOPIDY_YOUTUBE_MUSICAPI_ENABLED:-false}
-	channel_id = ${MOPIDY_YOUTUBE_MUSICAPI_CHANNEL:-UCYwjcFiUg8PpWM45vpBUc3Q}
 	musicapi_cookiefile = ${MOPIDY_YOUTUBE_MUSICAPI_COOKIE_FILE:-}
+	musicapi_browser_authentication_file = ${MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE:-}
+	channel_id = ${MOPIDY_YOUTUBE_MUSICAPI_CHANNEL:-UCYwjcFiUg8PpWM45vpBUc3Q}
 	search_results = ${MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS:-15}
 	playlist_max_videos = ${MOPIDY_YOUTUBE_MAX_VIDEOS:-20}
 	[ytmusic]

@@ -4,7 +4,7 @@
 
 KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.32
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.4.1
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.7.1
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
@@ -26,7 +26,7 @@ deploy: skaffold-run ## Deploy the application into the selected cluster.
 undeploy: skaffold-delete ## Undeploy the debug application.
 
 .PHONY: debug
-debug: SKAFFOLD_OPTS = --auto-build
+debug: SKAFFOLD_OPTS += --auto-build
 debug: skaffold-debug ## Deploy the application in debug mode.
 
 ##@ Development
@@ -48,7 +48,7 @@ kpt-pkg-update:
 		-v `pwd`:/data -w /data \
 		$(KPT_IMAGE) pkg update --strategy=$(KPT_PKG_UPDATE_STRATEGY) .
 
-skaffold-debug skaffold-dev: DOCKER_RUN_OPTS = -ti
+skaffold-debug skaffold-dev: DOCKER_RUN_OPTS += -ti
 skaffold-debug skaffold-dev skaffold-run skaffold-stop skaffold-delete: DOCKER_RUN_OPTS += --mount "type=bind,src=$(KUBECONFIG),dst=/tmp/.kube/config,ro"
 skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-debug skaffold-survey skaffold-help: skaffold-%:
 	mkdir -p $$HOME/.docker
@@ -71,15 +71,12 @@ push-image: skaffold-build ## Build and push the multi-arch image(s).
 
 .PHONY: binfmt-config
 binfmt-config: ## Enable multi-arch support on the host.
-	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.0.0-7 --reset -p yes
+	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.2.0-1 --reset -p yes
 
-.PHONY: prepare-release ## Build image, update version within manifests.
-prepare-release: require-version require-clean-worktree manifest-image binfmt-config
+.PHONY: release ## Build and push multi-arch image
+release: SKAFFOLD_OPTS += -t '$(VERSION)'
+release: require-version require-clean-worktree manifest-image binfmt-config push-image
 	make push-image VERSION=latest REGISTRY=$(REGISTRY)
-
-.PHONY: release
-release: SKAFFOLD_OPTS=-t '$(VERSION)'
-release: require-version require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
 
 .PHONY: manifest-image
 manifest-image: set-version render
