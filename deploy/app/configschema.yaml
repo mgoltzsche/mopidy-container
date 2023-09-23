@@ -35,19 +35,30 @@ spec:
       * Firefox: https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/
       * Chrome: https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc
       Also see https://github.com/natumbri/mopidy-youtube#configuration
+  - name: MOPIDY_YOUTUBE_MUSICAPI_AUTH_HEADERS
+    title: Youtube Music auth headers
+    type: password
+    category: Youtube
+    description: |
+      To access your personal Youtube Music account, you can copy/paste the HTTP request headers of a music.youtube.com POST request here as follows:
+      1. Browse https://music.youtube.com.
+      2. Open the network tab within your browser's developer tool.
+      3. Reload the Youtube Music page.
+      4. Within the developer tool, select an authenticated HTTP POST request with status 200 against the music.youtube.com domain.
+      5. Copy request headers (right click > copy > copy request headers).
   - name: MOPIDY_YOUTUBE_MUSICAPI_CHANNEL
     title: Youtube Music channel
-    category: Youtube
     type: string
-    description: When you configured your Youtube Music cookie, you can specify your private channel here.
+    category: Youtube
+    description: When you configured Youtube Music authentication, you can specify your private channel here.
   - name: MOPIDY_YOUTUBE_MAX_SEARCH_RESULTS
     title: Max. search results
-    category: Youtube
     type: number
+    category: Youtube
   - name: MOPIDY_YOUTUBE_MAX_VIDEOS
     title: Max. video search results
-    category: Youtube
     type: number
+    category: Youtube
   - name: MOPIDY_YOUTUBE_AUTOPLAY_ENABLED
     title: Autoplay enabled
     type: boolean
@@ -64,19 +75,17 @@ spec:
     title: Distance of the tracks selected by autoplay
     type: number
     category: Youtube
-  # mopidy-ytmusic doesn't work anyway
-  #- name: MOPIDY_YTMUSIC_OAUTH_JSON
-  #  title: Youtube Music OAuth JSON
-  #  type: password
-  #  category: Youtube Music
   - name: MOPIDY_SOUNDCLOUD_AUTH_TOKEN
-    title: Soundcloud API token
+    title: SoundCloud auth token
     type: password
-    category: Soundcloud
+    category: SoundCloud
+    description: |
+      To connect Mopidy with your SoundCloud account, log into SoundCloud, browse https://mopidy.com/ext/soundcloud/ and click the "Authenticate Mopidy with SoundCloud" button.
+      After you confirm the pop up that opens, the auth_token is shown below the button.
   - name: MOPIDY_SOUNDCLOUD_EXPLORE_SONGS
-    title: Number of songs returned from Soundcloud
+    title: Max. related songs returned
     type: number
-    category: Soundcloud
+    category: SoundCloud
   - name: MOPIDY_MPD_PASSWORD
     title: MPD password
     type: password

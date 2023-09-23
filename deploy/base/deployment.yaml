@@ -41,11 +41,11 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            cpu: 700m
-            memory: 2Gi # since it loads entire youtube tracks into memory apparently
+            cpu: 1200m
+            memory: 4Gi # since it loads entire youtube tracks into memory apparently
           requests:
-            cpu: 100m
-            memory: 32Mi
+            cpu: 700m
+            memory: 1Gi
         ports:
         - containerPort: 6680 # kpt-set: ${port}
         - containerPort: 6600

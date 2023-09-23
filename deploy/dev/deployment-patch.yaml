@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # kpt-merge: /blueprint
+  name: mopidy # kpt-set: ${name}
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|blueprint'
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        envFrom:
+        - secretRef:
+            name: mopidy-config
