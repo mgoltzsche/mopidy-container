@@ -17,6 +17,7 @@ concurrency: # Run release builds sequentially, cancel outdated PR builds
 
 permissions: # Grant write access to github.token within non-pull_request builds
   contents: write
+  packages: write
 
 jobs:
   build:
@@ -34,8 +35,8 @@ jobs:
       name: Prepare release
       uses: mgoltzsche/conventional-release@v0
       with:
-        commit-files: ./deploy
-        ignore-commits-before: cc90dd7dcdaa7746a104068c79ec9d7a62734308
+        commit-files: deploy setters.yaml
+        ignore-commits-before: aafe9695f1130c0280649b1573ad86765837d59f
 
     - name: Set up qemu
       uses: docker/setup-qemu-action@v3
