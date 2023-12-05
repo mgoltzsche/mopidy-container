@@ -7,18 +7,13 @@ set -eu
 
 DATA_DIRS='/var/lib/mopidy/autoplay /var/lib/mopidy/local/playlists /var/lib/mopidy/media'
 mkdir -p $DATA_DIRS
-chown mopidy:audio $DATA_DIRS
+[ "$MOPIDY_NO_CHMOD" = true ] || chown mopidy:audio $DATA_DIRS
 if [ ! -d /var/lib/mopidy/playlists ]; then
 	mkdir /var/lib/mopidy/playlists
 	cp /etc/mopidy/default-data/playlist.m3u8 /var/lib/mopidy/playlists/
 fi
 
 # Generate mopidy config
-
-if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
-	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
-	echo "Generated MPD password: $MOPIDY_MPD_PASSWORD" >&2
-fi
 
 if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
 	if [ ! -p "$MOPIDY_AUDIO_OUTPUT_PIPE" ]; then
@@ -33,6 +28,11 @@ if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
 			cat /tmp/start.wav > "$MOPIDY_AUDIO_OUTPUT_PIPE"
 		) &
 	fi
+elif [ "${PULSE_SERVER:-}" ]; then
+	MOPIDY_AUDIO_OUTPUT="pulsesink server=$PULSE_SERVER"
+else
+	echo 'Must specify one env var of MOPIDY_AUDIO_OUTPUT, MOPIDY_AUDIO_OUTPUT_PIPE or PULSE_SERVER but none specified' >&2
+	exit 1
 fi
 
 if [ "${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}" ]; then
@@ -51,6 +51,11 @@ fi
 if [ "${MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH:-}" ]; then
 	MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE=/tmp/ytmusicapi-browser.json
 	echo "$MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH" > $MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE
+fi
+
+if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
+	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
+	echo "Generated MPD password: $MOPIDY_MPD_PASSWORD" >&2
 fi
 
 cat > /tmp/mopidy.conf <<-EOF
@@ -96,4 +101,4 @@ if [ ! -f /var/lib/mopidy/.local-scanned ]; then
 fi
 
 echo 'Launching Mopidy'
-mopidy --config $MOPIDY_CONF ${MOPIDY_OPTS:-} "$@" || (sleep 1; false)
+exec mopidy --config $MOPIDY_CONF ${MOPIDY_OPTS:-} "$@"

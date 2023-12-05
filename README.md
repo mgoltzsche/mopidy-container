@@ -19,6 +19,15 @@ To build the application container image using [skaffold](https://skaffold.dev),
 make image
 ```
 
+### Test the mopidy container using docker
+
+To test container changes, you can run mopidy simply using docker with the pulseaudio unix socket and cookie mounted:
+```sh
+make run-mopidy
+```
+
+Once mopidy started, you can browse it at [`http://localhost:6680`](http://localhost:6680).
+
 ### Deploy the application
 To deploy the application using [skaffold](https://skaffold.dev), run:
 ```sh
