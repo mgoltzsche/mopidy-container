@@ -1,13 +1,13 @@
 FROM alpine:3.17
 RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git
 RUN python3 -m pip install \
-	Mopidy==3.4.1 \
-	Mopidy-Iris==3.68.0 \
+	Mopidy==3.4.2 \
+	Mopidy-Iris==3.69.2 \
 	Mopidy-Autoplay==0.2.3 \
 	Mopidy-MPD==3.3.0 \
 	Mopidy-Local==3.2.1 \
-	yt-dlp==2023.7.6 \
-	ytmusicapi==1.2.1 \
+	yt-dlp==2023.11.16 \
+	ytmusicapi==1.3.2 \
 	Mopidy-SoundCloud==3.0.2 \
 	Mopidy-Podcast==3.0.1 \
 	Mopidy-SomaFM==2.0.2 \
