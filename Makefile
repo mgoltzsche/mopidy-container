@@ -10,6 +10,9 @@ KUBECONFIG ?= $$HOME/.kube/config
 
 DOCKER ?= docker
 
+# Include a custom Makefile if exists.
+sinclude Makefile-ext.mk
+
 .PHONY: all
 all: image
 
@@ -52,7 +55,8 @@ skaffold-debug skaffold-dev: DOCKER_RUN_OPTS += -ti
 skaffold-debug skaffold-dev skaffold-run skaffold-stop skaffold-delete: DOCKER_RUN_OPTS += --mount "type=bind,src=$(KUBECONFIG),dst=/tmp/.kube/config,ro"
 skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-debug skaffold-survey skaffold-help: skaffold-%:
 	mkdir -p $$HOME/.docker
-	$(DOCKER) run $(DOCKER_RUN_OPTS) --rm -v "`pwd`:/workspace" -w /workspace --network=host \
+	$(DOCKER) run $(DOCKER_RUN_OPTS) --rm -u "`id -u`:`id -g`" --group-add=998 \
+		-v "`pwd`:/workspace" -w /workspace --network=host \
 		-v "/var/run/docker.sock:/var/run/docker.sock" \
 		--mount "type=bind,src=$$HOME/.docker,dst=/tmp/.docker" \
 		-e HOME=/tmp \
