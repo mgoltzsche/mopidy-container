@@ -28,6 +28,12 @@ make run-mopidy
 
 Once mopidy started, you can browse it at [`http://localhost:6680`](http://localhost:6680).
 
+### Troubleshooting
+
+When the log doesn't give you sufficient information to find the cause of a problem, you can enable debug logs as follows:
+* To enable Mopidy debug logs, set the env var `MOPIDY_OPTS=-v`.
+* To enable GStreamer debug logs, set the env var `GST_DEBUG=3`.
+
 ### Deploy the application
 To deploy the application using [skaffold](https://skaffold.dev), run:
 ```sh
