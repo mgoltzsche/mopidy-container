@@ -13,6 +13,8 @@ DOCKER ?= docker
 # Include a custom Makefile if exists.
 sinclude Makefile-ext.mk
 
+.DEFAULT_GOAL := all
+
 .PHONY: all
 all: image
 
