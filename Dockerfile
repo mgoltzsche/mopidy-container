@@ -28,8 +28,9 @@ RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 #ARG MOPIDY_YTMUSIC_VERSION=c60055bc4cbc35534ef4c141fc883928bf5ca280 # 0.3.8 + pytube patch
 #RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
 
-#ARG YTDLP_VERSION=2023.07.06
-#RUN python3 -m pip install https://github.com/yt-dlp/yt-dlp/archive/${YTDLP_VERSION}.tar.gz
+# Mopidy-Beets==4.0.1 fork
+ARG MOPIDY_BEETS_VERSION=f4a078e9718ffd5c7ae2f8eedb0206921a3e1a50
+RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-beets@$MOPIDY_BEETS_VERSION
 
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \
