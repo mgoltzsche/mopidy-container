@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.18
 RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git
 RUN python3 -m pip install \
 	Mopidy==3.4.2 \
