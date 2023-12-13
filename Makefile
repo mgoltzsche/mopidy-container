@@ -4,7 +4,7 @@
 
 KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.32
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.7.1
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.9.0
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
