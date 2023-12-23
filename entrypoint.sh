@@ -10,7 +10,7 @@ set -eu
 
 DATA_DIRS='/var/lib/mopidy/autoplay /var/lib/mopidy/local/playlists /var/lib/mopidy/media'
 mkdir -p $DATA_DIRS
-[ "$MOPIDY_NO_CHMOD" = true ] || chown mopidy:audio $DATA_DIRS
+[ "${MOPIDY_NO_CHMOD:-}" = true ] || chown mopidy:audio $DATA_DIRS
 if [ ! -d /var/lib/mopidy/playlists ]; then
 	mkdir /var/lib/mopidy/playlists
 	cp /etc/mopidy/default-data/playlist.m3u8 /var/lib/mopidy/playlists/
@@ -58,7 +58,7 @@ fi
 
 PLAYLIST_DIR=/var/lib/mopidy/playlists
 rm -rf $PLAYLIST_DIR/beets-*.m3u8
-if [ "$MOPIDY_BEETS_ENABLED" = true ]; then
+if [ "${MOPIDY_BEETS_ENABLED:-}" = true ]; then
 	export BEETS_URL="http://${MOPIDY_BEETS_HOSTNAME}:${MOPIDY_BEETS_PORT}"
 	echo "Using beets server at $BEETS_URL"
 	echo "Fetching playlists from $BEETS_URL/m3u/mopidy/"
