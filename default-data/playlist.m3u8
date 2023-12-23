@@ -1,5 +1,7 @@
 #EXTM3U
-#EXTINF:1,Ed Solo
+#EXTINF:-1,Kutiman - Thru Tokyo
+youtube:https://www.youtube.com/watch?v=mHO_LeQjaas
+#EXTINF:-1,Ed Solo
 youtube:https://www.youtube.com/watch?v=NOD7YaBScmY
-#EXTINF:2,Geode playlist
+#EXTINF:-1,Geode playlist
 youtube:playlist:RDMmedzIt0Bk4

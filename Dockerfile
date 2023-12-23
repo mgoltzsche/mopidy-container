@@ -1,25 +1,29 @@
-FROM alpine:3.18
-RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git jq
-RUN python3 -m pip install \
-	Mopidy==3.4.2 \
-	Mopidy-Iris==3.69.2 \
-	Mopidy-Autoplay==0.2.3 \
-	Mopidy-MPD==3.3.0 \
-	Mopidy-Local==3.2.1 \
-	yt-dlp==2023.11.16 \
-	ytmusicapi==1.3.2 \
-	Mopidy-SoundCloud==3.0.2 \
-	Mopidy-Podcast==3.0.1 \
-	Mopidy-SomaFM==2.0.2 \
-	Mopidy-TuneIn==1.1.0 \
-	Mopidy-Party==1.2.1 \
-	Mopidy-AlarmClock==0.1.9
+FROM python:3-alpine3.19
+RUN set -eux; \
+	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
+	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
+	python3 -m pip install \
+		Mopidy==3.4.2 \
+		PyGObject==3.46.0 \
+		Mopidy-Iris==3.69.2 \
+		Mopidy-Autoplay==0.2.3 \
+		Mopidy-MPD==3.3.0 \
+		Mopidy-Local==3.2.1 \
+		Mopidy-SoundCloud==3.0.2 \
+		Mopidy-Podcast==3.0.1 \
+		Mopidy-SomaFM==2.0.2 \
+		Mopidy-TuneIn==1.1.0 \
+		Mopidy-Party==1.2.1 \
+		Mopidy-AlarmClock==0.1.9 \
+		ytmusicapi==1.3.2; \
+	apk del $BUILD_DEPS
 
 # Mopidy-Youtube==3.7
-ARG MOPIDY_YOUTUBE_VERSION=c76815ffedb9f119d1d9129645efc85865f5b4b7 # 3.7 + ytmusicapi auth patch
+ARG MOPIDY_YOUTUBE_VERSION=f14535e6aeec19d5a581aebe4b8143211b462cc4 # 3.7 + ytmusicapi auth patch
 RUN python3 -m pip install git+https://github.com/natumbri/mopidy-youtube.git@$MOPIDY_YOUTUBE_VERSION
 
-ARG YTDLP_VERSION=c1d71d0d9f41db5e4306c86af232f5f6220a130b
+# yt-dlp==2023.11.16 + patches
+ARG YTDLP_VERSION=bc4ab17b38f01000d99c5c2bedec89721fee65ec
 RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 
 # Install Mopidy-YTMusic from fork that supports newer pytube version.
@@ -50,4 +54,4 @@ ENV MOPIDY_MPD_PASSWORD=generate \
 	MOPIDY_IRIS_SNAPCAST_PORT=443
 COPY entrypoint.sh ytmusicapi-login.py /
 ENTRYPOINT [ "/entrypoint.sh" ]
-HEALTHCHECK --interval=5s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/
+HEALTHCHECK --interval=10s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/
