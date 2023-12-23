@@ -1,5 +1,5 @@
 FROM alpine:3.18
-RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git
+RUN apk add --update --no-cache python3-dev py3-pip py3-gst gst-plugins-good gst-plugins-bad sox openssl ca-certificates git jq
 RUN python3 -m pip install \
 	Mopidy==3.4.2 \
 	Mopidy-Iris==3.69.2 \
@@ -28,9 +28,9 @@ RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 #ARG MOPIDY_YTMUSIC_VERSION=c60055bc4cbc35534ef4c141fc883928bf5ca280 # 0.3.8 + pytube patch
 #RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
 
-# Mopidy-Beets==4.0.1 fork
-ARG MOPIDY_BEETS_VERSION=f4a078e9718ffd5c7ae2f8eedb0206921a3e1a50
-RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-beets@$MOPIDY_BEETS_VERSION
+# Mopidy-Beets==4.0.1 + none-album patch
+ARG MOPIDY_BEETS_VERSION=dfb11601f4cb617281707486d886f01952e90ebb
+RUN python3 -m pip install git+https://github.com/mopidy/mopidy-beets@$MOPIDY_BEETS_VERSION
 
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \

@@ -11,6 +11,7 @@ run-mopidy: image ## Run mopidy container simply using docker.
 		-e PULSE_SERVER=unix:/host/run/user/`id -u`/pulse/native \
 		--mount "type=bind,src=$$HOME/.config/pulse,dst=/var/lib/mopidy/.config/pulse" \
                 -e HOME=/var/lib/mopidy \
+		-e MOPIDY_BEETS_ENABLED=true \
 		ghcr.io/mgoltzsche/mopidy:dev
 
 .PHONY: clean-data

@@ -100,3 +100,18 @@ spec:
     description: The maximum number of tracks a guest can submit at once.
     type: number
     category: Party
+  - name: MOPIDY_BEETS_ENABLED
+    title: Use beets
+    description: The maximum number of tracks a guest can submit at once.
+    type: boolean
+    category: beets
+  - name: MOPIDY_BEETS_HOSTNAME
+    title: beets hostname
+    description: The hostname of the beets server to connect with.
+    type: string
+    category: beets
+  - name: MOPIDY_BEETS_PORT
+    title: beets port
+    description: The port of the beets server to connect with.
+    type: number
+    category: beets

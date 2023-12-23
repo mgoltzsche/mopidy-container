@@ -4,6 +4,9 @@ set -eu
 
 : ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443}
 : ${MOPIDY_IRIS_SNAPCAST_HOST:=$HOSTNAME}
+: ${MOPIDY_BEETS_ENABLED:=false}
+: ${MOPIDY_BEETS_HOSTNAME:=127.0.0.1}
+: ${MOPIDY_BEETS_PORT:=8337}
 
 DATA_DIRS='/var/lib/mopidy/autoplay /var/lib/mopidy/local/playlists /var/lib/mopidy/media'
 mkdir -p $DATA_DIRS
@@ -53,6 +56,18 @@ if [ "${MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH:-}" ]; then
 	echo "$MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH" > $MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE
 fi
 
+PLAYLIST_DIR=/var/lib/mopidy/playlists
+rm -rf $PLAYLIST_DIR/beets-*.m3u8
+if [ "$MOPIDY_BEETS_ENABLED" = true ]; then
+	export BEETS_URL="http://${MOPIDY_BEETS_HOSTNAME}:${MOPIDY_BEETS_PORT}"
+	echo "Using beets server at $BEETS_URL"
+	echo "Fetching playlists from $BEETS_URL/m3u/mopidy/"
+	mkdir -p $PLAYLIST_DIR
+	PLAYLISTS="$(wget -qO - "$BEETS_URL/m3u/mopidy/")"
+	echo "Found $(echo "$PLAYLISTS" | jq '[.[] | select(.type == "file")] | length') playlists"
+	echo "$PLAYLISTS" | jq -er '.[] | select(.type == "file") | .name' | xargs -I{} sh -c 'wget -qO - "$BEETS_URL/m3u/mopidy/{}" > '"$PLAYLIST_DIR/beets-{}"
+fi
+
 if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
 	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
 	echo "Generated MPD password: $MOPIDY_MPD_PASSWORD" >&2
@@ -90,6 +105,10 @@ cat > /tmp/mopidy.conf <<-EOF
 	[party]
 	votes_to_skip = ${MOPIDY_PARTY_VOTES_TO_SKIP:-3}
 	max_tracks = ${MOPIDY_PARTY_MAX_TRACKS:-5}
+	[beets]
+	enabled = ${MOPIDY_BEETS_ENABLED}
+	hostname = ${MOPIDY_BEETS_HOSTNAME}
+	port = ${MOPIDY_BEETS_PORT}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
