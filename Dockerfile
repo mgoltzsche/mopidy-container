@@ -16,7 +16,7 @@ RUN set -eux; \
 		Mopidy-Party==1.2.1 \
 		Mopidy-AlarmClock==0.1.9 \
 		ytmusicapi==1.3.2; \
-	apk del $BUILD_DEPS
+	apk del --purge $BUILD_DEPS
 
 # Mopidy-Youtube==3.7
 ARG MOPIDY_YOUTUBE_VERSION=f14535e6aeec19d5a581aebe4b8143211b462cc4 # 3.7 + ytmusicapi auth patch
