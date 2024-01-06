@@ -33,7 +33,7 @@ RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 #RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
 
 # Mopidy-Beets==4.0.1 + none-album patch
-ARG MOPIDY_BEETS_VERSION=dfb11601f4cb617281707486d886f01952e90ebb
+ARG MOPIDY_BEETS_VERSION=7fbdf56c6b6b8318974e4add6446e15654df4bea
 RUN python3 -m pip install git+https://github.com/mopidy/mopidy-beets@$MOPIDY_BEETS_VERSION
 
 COPY conf /etc/mopidy/extensions.d
