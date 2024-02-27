@@ -26,3 +26,7 @@ stringData:
   MOPIDY_BEETS_ENABLED: "false"
   MOPIDY_BEETS_HOSTNAME: "beets"
   MOPIDY_BEETS_PORT: "8337"
+  MOPIDY_SUBIDY_ENABLED: "false"
+  MOPIDY_SUBIDY_URL: "http://beets:8337/subsonic"
+  MOPIDY_SUBIDY_USERNAME: "user"
+  MOPIDY_SUBIDY_PASSWORD: "password"

@@ -102,7 +102,7 @@ spec:
     category: Party
   - name: MOPIDY_BEETS_ENABLED
     title: Use beets
-    description: The maximum number of tracks a guest can submit at once.
+    description: Enable beets web API integration
     type: boolean
     category: beets
   - name: MOPIDY_BEETS_HOSTNAME
@@ -115,3 +115,23 @@ spec:
     description: The port of the beets server to connect with.
     type: number
     category: beets
+  - name: MOPIDY_SUBIDY_ENABLED
+    title: Use Subsonic Server
+    description: Enable Subsonic API integration
+    type: boolean
+    category: subsonic
+  - name: MOPIDY_SUBIDY_URL
+    title: Server URL
+    description: The URL pointing to the Subsonic server that hosts your music library, e.g. http://my-subsonic-server:8080
+    type: string
+    category: subsonic
+  - name: MOPIDY_SUBIDY_USERNAME
+    title: Username
+    description: The username used to authenticate with the Subsonic server.
+    type: string
+    category: subsonic
+  - name: MOPIDY_SUBIDY_PASSWORD
+    title: Password
+    description: The password used to authenticate with the Subsonic server.
+    type: password
+    category: subsonic

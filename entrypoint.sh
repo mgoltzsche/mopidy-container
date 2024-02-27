@@ -109,6 +109,12 @@ cat > /tmp/mopidy.conf <<-EOF
 	enabled = ${MOPIDY_BEETS_ENABLED}
 	hostname = ${MOPIDY_BEETS_HOSTNAME}
 	port = ${MOPIDY_BEETS_PORT}
+	[subidy]
+	enabled=${MOPIDY_SUBIDY_ENABLED:-false}
+	url=${MOPIDY_SUBIDY_URL:-http://127.0.0.1:8080}
+	username=${MOPIDY_SUBIDY_USERNAME:-user}
+	password=${MOPIDY_SUBIDY_PASSWORD:-password}
+
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf

@@ -15,6 +15,7 @@ RUN set -eux; \
 		Mopidy-TuneIn==1.1.0 \
 		Mopidy-Party==1.2.1 \
 		Mopidy-AlarmClock==0.1.9 \
+		Mopidy-Subidy==1.0.0 \
 		ytmusicapi==1.3.2; \
 	apk del --purge $BUILD_DEPS
 
