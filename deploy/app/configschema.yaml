@@ -135,3 +135,15 @@ spec:
     description: The password used to authenticate with the Subsonic server.
     type: password
     category: subsonic
+  - name: MOPIDY_WEBM3U_ENABLED
+    title: Enable WebM3U plugin (HTTP)
+    description: |
+      Browse and listen to playlists contained within the seed playlist that is served by a HTTP server.
+      When you enable this plugin, you have to disable the built-in/local m3u plugin.
+    type: boolean
+    category: webm3u
+  - name: MOPIDY_WEBM3U_SEED_M3U
+    title: Seed playlist URL
+    description: URL to the seed playlist, the playlist of playlists, the playlist that contains URLs to other playlists.
+    type: string
+    category: webm3u

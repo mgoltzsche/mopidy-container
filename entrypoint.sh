@@ -7,6 +7,9 @@ set -eu
 : ${MOPIDY_BEETS_ENABLED:=false}
 : ${MOPIDY_BEETS_HOSTNAME:=127.0.0.1}
 : ${MOPIDY_BEETS_PORT:=8337}
+: ${MOPIDY_WEBM3U_ENABLED:=false}
+MOPIDY_WEBM3U_NOT_ENABLED="$([ "$MOPIDY_WEBM3U_ENABLED" = true ] && echo false || echo true)"
+: ${MOPIDY_M3U_ENABLED:=$MOPIDY_WEBM3U_NOT_ENABLED}
 
 DATA_DIRS='/var/lib/mopidy/autoplay /var/lib/mopidy/local/playlists /var/lib/mopidy/media'
 mkdir -p $DATA_DIRS
@@ -110,11 +113,15 @@ cat > /tmp/mopidy.conf <<-EOF
 	hostname = ${MOPIDY_BEETS_HOSTNAME}
 	port = ${MOPIDY_BEETS_PORT}
 	[subidy]
-	enabled=${MOPIDY_SUBIDY_ENABLED:-false}
-	url=${MOPIDY_SUBIDY_URL:-http://127.0.0.1:8080}
-	username=${MOPIDY_SUBIDY_USERNAME:-user}
-	password=${MOPIDY_SUBIDY_PASSWORD:-password}
-
+	enabled = ${MOPIDY_SUBIDY_ENABLED:-false}
+	url = ${MOPIDY_SUBIDY_URL:-http://127.0.0.1:8080}
+	username = ${MOPIDY_SUBIDY_USERNAME:-user}
+	password = ${MOPIDY_SUBIDY_PASSWORD:-password}
+	[m3u]
+	enabled = ${MOPIDY_M3U_ENABLED}
+	[webm3u]
+	enabled = ${MOPIDY_WEBM3U_ENABLED}
+	seed_m3u = ${MOPIDY_WEBM3U_SEED_M3U:-http://beets:8337/m3u/playlists/index.m3u8}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
