@@ -122,6 +122,7 @@ cat > /tmp/mopidy.conf <<-EOF
 	[webm3u]
 	enabled = ${MOPIDY_WEBM3U_ENABLED}
 	seed_m3u = ${MOPIDY_WEBM3U_SEED_M3U:-http://beets:8337/m3u/playlists/index.m3u8}
+	uri_scheme = ${MOPIDY_WEBM3U_URI_SCHEME:-m3u}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
