@@ -32,4 +32,4 @@ stringData:
   MOPIDY_SUBIDY_PASSWORD: "password"
   MOPIDY_M3U_ENABLED: "true"
   MOPIDY_WEBM3U_ENABLED: "false"
-  MOPIDY_WEBM3U_SEED_M3U: "http://beets:8337/m3u/playlists/index.m3u8"
+  MOPIDY_WEBM3U_SEED_M3U: "http://beets:8337/m3u/playlists/index.m3u"
