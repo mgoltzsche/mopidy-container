@@ -59,18 +59,6 @@ if [ "${MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH:-}" ]; then
 	echo "$MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH" > $MOPIDY_YOUTUBE_MUSICAPI_BROWSER_AUTH_FILE
 fi
 
-PLAYLIST_DIR=/var/lib/mopidy/playlists
-rm -rf $PLAYLIST_DIR/beets-*.m3u8
-if [ "${MOPIDY_BEETS_ENABLED:-}" = true ]; then
-	export BEETS_URL="http://${MOPIDY_BEETS_HOSTNAME}:${MOPIDY_BEETS_PORT}"
-	echo "Using beets server at $BEETS_URL"
-	echo "Fetching playlists from $BEETS_URL/m3u/mopidy/"
-	mkdir -p $PLAYLIST_DIR
-	PLAYLISTS="$(wget -qO - "$BEETS_URL/m3u/mopidy/")"
-	echo "Found $(echo "$PLAYLISTS" | jq '[.[] | select(.type == "file")] | length') playlists"
-	echo "$PLAYLISTS" | jq -er '.[] | select(.type == "file") | .name' | xargs -I{} sh -c 'wget -qO - "$BEETS_URL/m3u/mopidy/{}" > '"$PLAYLIST_DIR/beets-{}"
-fi
-
 if [ -z ${MOPIDY_MPD_PASSWORD+x} ] || [ "$MOPIDY_MPD_PASSWORD" = generate ]; then
 	MOPIDY_MPD_PASSWORD=$(openssl rand -base64 18)
 	echo "Generated MPD password: $MOPIDY_MPD_PASSWORD" >&2
