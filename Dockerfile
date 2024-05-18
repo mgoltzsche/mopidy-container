@@ -15,7 +15,6 @@ RUN set -eux; \
 		Mopidy-TuneIn==1.1.0 \
 		Mopidy-Party==1.2.1 \
 		Mopidy-AlarmClock==0.1.9 \
-		Mopidy-Subidy==1.0.0 \
 		Mopidy-WebM3U==0.1.2 \
 		ytmusicapi==1.3.2; \
 	apk del --purge $BUILD_DEPS
@@ -37,6 +36,10 @@ RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 # Mopidy-Beets==4.0.1 + none-album patch
 ARG MOPIDY_BEETS_VERSION=7fbdf56c6b6b8318974e4add6446e15654df4bea
 RUN python3 -m pip install git+https://github.com/mopidy/mopidy-beets@$MOPIDY_BEETS_VERSION
+
+# Mopidy-Subidy==1.0.0 + coverart support
+ARG MOPIDY_SUBIDY_VERSION=fa3b21216d1a3b937e926d289f8f18f8277b6cc7
+RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-subidy@$MOPIDY_SUBIDY_VERSION
 
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \
