@@ -102,7 +102,9 @@ spec:
     category: Party
   - name: MOPIDY_BEETS_ENABLED
     title: Use beets
-    description: Enable beets web API integration
+    description: |
+      Enable Beets web API integration.
+      The Beets web API provides better search results than the Beetstream (Subsonic) integration.
     type: boolean
     category: beets
   - name: MOPIDY_BEETS_HOSTNAME
@@ -136,14 +138,19 @@ spec:
     type: password
     category: subsonic
   - name: MOPIDY_WEBM3U_ENABLED
-    title: Enable WebM3U plugin (HTTP)
+    title: Load M3U playlists from HTTP server
     description: |
-      Browse and listen to playlists contained within the seed playlist that is served by a HTTP server.
+      Browse and listen to playlists that are hosted by a HTTP server such as e.g. beets-webm3u.
       When you enable this plugin, you have to disable the built-in/local m3u plugin.
     type: boolean
     category: webm3u
   - name: MOPIDY_WEBM3U_SEED_M3U
     title: Seed playlist URL
-    description: URL to the seed playlist, the playlist of playlists, the playlist that contains URLs to other playlists.
+    description: |
+      URL to the seed playlist, the playlist of playlists, the playlist that contains URLs to other playlists.
+      Loading large playlists (>100 songs) that contain HTTP URLs is very slow and consumes a lot of memory (eventually gets Mopidy OOM-killed).
+      To avoid these problems, you can let the beets-webm3u server provide playlists that contain item URIs that are handled by other Mopidy extensions more efficiently and user-friendly, e.g.
+      delegating to the Beets API by specifying "http://beets:8337/m3u/playlists/index.m3u?uri-format=beets:library:track;$id"
+      or to the Subsonic API integration by specifying "http://beets:8337/m3u/playlists/index.m3u?uri-format=subidy:song:3$id".
     type: string
     category: webm3u
