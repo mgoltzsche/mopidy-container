@@ -4,10 +4,15 @@ set -eu
 
 : ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443}
 : ${MOPIDY_IRIS_SNAPCAST_HOST:=$HOSTNAME}
+: ${MOPIDY_SUBIDY_ENABLED:=false}
+: ${MOPIDY_SUBIDY_URL:=http://127.0.0.1:8080}
+: ${MOPIDY_SUBIDY_USERNAME:=user}
+: ${MOPIDY_SUBIDY_PASSWORD:=password}
 : ${MOPIDY_BEETS_ENABLED:=false}
 : ${MOPIDY_BEETS_HOSTNAME:=127.0.0.1}
 : ${MOPIDY_BEETS_PORT:=8337}
 : ${MOPIDY_WEBM3U_ENABLED:=false}
+: ${MOPIDY_WEBM3U_SEED_M3U:=http://beets:8337/m3u/playlists/index.m3u}
 MOPIDY_WEBM3U_NOT_ENABLED="$([ "$MOPIDY_WEBM3U_ENABLED" = true ] && echo false || echo true)"
 : ${MOPIDY_M3U_ENABLED:=$MOPIDY_WEBM3U_NOT_ENABLED}
 
@@ -39,6 +44,26 @@ elif [ "${PULSE_SERVER:-}" ]; then
 else
 	echo 'Must specify one env var of MOPIDY_AUDIO_OUTPUT, MOPIDY_AUDIO_OUTPUT_PIPE or PULSE_SERVER but none specified' >&2
 	exit 1
+fi
+
+if [ "$MOPIDY_BEETS_ENABLED" = true ]; then
+	BEETS_URL="http://$MOPIDY_BEETS_HOSTNAME:$MOPIDY_BEETS_PORT/"
+	if ! wget -qO - "$BEETS_URL" >/dev/null; then
+		echo "ERROR: Beets server at $BEETS_URL is not available" >&2
+		exit 2
+	fi
+fi
+if [ "$MOPIDY_SUBIDY_ENABLED" = true ]; then
+	if ! wget -qO - "$MOPIDY_SUBIDY_URL?u=$MOPIDY_SUBIDY_USERNAME&t=$MOPIDY_SUBIDY_PASSWORD"; then
+		echo "ERROR: Subsonic server at $MOPIDY_SUBIDY_URL is not available" >&2
+		exit 2
+	fi
+fi
+if [ "$MOPIDY_WEBM3U_ENABLED" = true ]; then
+	if ! wget -qO - "$MOPIDY_WEBM3U_SEED_M3U" >/dev/null; then
+		echo "ERROR: WebM3U at $MOPIDY_WEBM3U_SEED_M3U is not available" >&2
+		exit 2
+	fi
 fi
 
 if [ "${MOPIDY_YOUTUBE_MUSICAPI_COOKIE:-}" ]; then
@@ -101,15 +126,15 @@ cat > /tmp/mopidy.conf <<-EOF
 	hostname = ${MOPIDY_BEETS_HOSTNAME}
 	port = ${MOPIDY_BEETS_PORT}
 	[subidy]
-	enabled = ${MOPIDY_SUBIDY_ENABLED:-false}
-	url = ${MOPIDY_SUBIDY_URL:-http://127.0.0.1:8080}
-	username = ${MOPIDY_SUBIDY_USERNAME:-user}
-	password = ${MOPIDY_SUBIDY_PASSWORD:-password}
+	enabled = ${MOPIDY_SUBIDY_ENABLED}
+	url = ${MOPIDY_SUBIDY_URL}
+	username = ${MOPIDY_SUBIDY_USERNAME}
+	password = ${MOPIDY_SUBIDY_PASSWORD}
 	[m3u]
 	enabled = ${MOPIDY_M3U_ENABLED}
 	[webm3u]
 	enabled = ${MOPIDY_WEBM3U_ENABLED}
-	seed_m3u = ${MOPIDY_WEBM3U_SEED_M3U:-http://beets:8337/m3u/playlists/index.m3u8}
+	seed_m3u = ${MOPIDY_WEBM3U_SEED_M3U}
 	uri_scheme = ${MOPIDY_WEBM3U_URI_SCHEME:-m3u}
 EOF
 
