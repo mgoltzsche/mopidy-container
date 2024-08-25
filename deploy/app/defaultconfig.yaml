@@ -5,6 +5,7 @@ metadata: # kpt-merge: /${APP_NAME:=app}-defaultconfig
   annotations:
     internal.kpt.dev/upstream-identifier: '|Secret|default|${APP_NAME:=app}-defaultconfig'
 stringData:
+  MOPIDY_AUDIO_OUTPUT_REPLAYGAIN: "true"
   MOPIDY_MPD_PASSWORD: generate
   MOPIDY_YOUTUBE_ENABLED: "true"
   MOPIDY_YOUTUBE_API_ENABLED: "true"

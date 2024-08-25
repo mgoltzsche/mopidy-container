@@ -6,6 +6,12 @@ metadata: # kpt-merge: /${APP_NAME:=app}
     internal.kpt.dev/upstream-identifier: 'apps.kubemate.mgoltzsche.github.com|AppConfigSchema|default|${APP_NAME:=app}'
 spec:
   params:
+  - name: MOPIDY_AUDIO_OUTPUT_REPLAYGAIN
+    title: Enable replay gain
+    type: boolean
+    category: Audio output
+    description: |
+      Normalize audio output volume level based on tags within the audio data.
   - name: MOPIDY_YOUTUBE_ENABLED
     title: Use Youtube
     type: boolean

@@ -4,6 +4,7 @@ set -eu
 
 : ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443}
 : ${MOPIDY_IRIS_SNAPCAST_HOST:=$HOSTNAME}
+: ${MOPIDY_AUDIO_OUTPUT_REPLAYGAIN:=true}
 : ${MOPIDY_SUBIDY_ENABLED:=false}
 : ${MOPIDY_SUBIDY_URL:=http://127.0.0.1:8080}
 : ${MOPIDY_SUBIDY_USERNAME:=user}
@@ -44,6 +45,9 @@ elif [ "${PULSE_SERVER:-}" ]; then
 else
 	echo 'Must specify one env var of MOPIDY_AUDIO_OUTPUT, MOPIDY_AUDIO_OUTPUT_PIPE or PULSE_SERVER but none specified' >&2
 	exit 1
+fi
+if [ "$MOPIDY_AUDIO_OUTPUT_REPLAYGAIN" = true ]; then
+	MOPIDY_AUDIO_OUTPUT="rgvolume ! $MOPIDY_AUDIO_OUTPUT"
 fi
 
 if [ "$MOPIDY_BEETS_ENABLED" = true ]; then
