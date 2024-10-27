@@ -6,5 +6,6 @@ resources:
 - ../base
 - https://github.com/mgoltzsche/snapcast-container.git/deploy/snapclient-ingress?ref=v0.7.0 # kpt-set: https://github.com/mgoltzsche/snapcast-container.git/deploy/snapclient-ingress?ref=v${snapcast-version}
 - service.yaml
+- service-nodeport.yaml
 patchesStrategicMerge:
 - deployment-patch.yaml
