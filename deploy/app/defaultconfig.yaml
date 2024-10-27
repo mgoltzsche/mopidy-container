@@ -33,3 +33,5 @@ stringData:
   MOPIDY_SUBIDY_PASSWORD: "password"
   MOPIDY_WEBM3U_ENABLED: "false"
   MOPIDY_WEBM3U_SEED_M3U: "http://beets:8337/m3u/playlists/index.m3u?uri-format=subidy:song:3$id"
+  MOPIDY_TUNEIN_ENABLED: "false"
+  MOPIDY_TUNEIN_FILTER: ""

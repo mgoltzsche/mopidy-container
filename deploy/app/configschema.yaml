@@ -160,3 +160,15 @@ spec:
       or to the Subsonic API integration by specifying "http://beets:8337/m3u/playlists/index.m3u?uri-format=subidy:song:3$id".
     type: string
     category: webm3u
+  - name: MOPIDY_TUNEIN_ENABLED
+    title: Enable TuneIn integration
+    description: Enable the TuneIn Mopidy Plugin
+    type: boolean
+    category: tunein
+  - name: MOPIDY_TUNEIN_FILTER
+    title: TuneIn search filter
+    description: |
+      Specify the filter to use for TuneIn searches.
+      Allowed values are '', 'station' or 'program'.
+    type: string
+    category: tunein

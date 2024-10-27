@@ -140,6 +140,9 @@ cat > /tmp/mopidy.conf <<-EOF
 	enabled = ${MOPIDY_WEBM3U_ENABLED}
 	seed_m3u = ${MOPIDY_WEBM3U_SEED_M3U}
 	uri_scheme = ${MOPIDY_WEBM3U_URI_SCHEME:-m3u}
+	[tunein]
+	enabled = ${MOPIDY_TUNEIN_ENABLED:-false}
+	filter = ${MOPIDY_TUNEIN_FILTER:-}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
