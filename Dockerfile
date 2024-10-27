@@ -5,7 +5,7 @@ RUN set -eux; \
 	python3 -m pip install \
 		Mopidy==3.4.2 \
 		PyGObject==3.46.0 \
-		Mopidy-Iris==3.69.2 \
+		Mopidy-Iris==3.69.3 \
 		Mopidy-Autoplay==0.2.3 \
 		Mopidy-MPD==3.3.0 \
 		Mopidy-Local==3.2.1 \
