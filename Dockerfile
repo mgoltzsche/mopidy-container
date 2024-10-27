@@ -16,7 +16,8 @@ RUN set -eux; \
 		Mopidy-Party==1.2.1 \
 		Mopidy-AlarmClock==0.1.9 \
 		Mopidy-WebM3U==0.1.3 \
-		ytmusicapi==1.3.2; \
+		ytmusicapi==1.3.2 \
+		yt-dlp==2024.10.22; \
 	apk del --purge $BUILD_DEPS
 
 # Mopidy-Youtube==3.7
@@ -24,8 +25,8 @@ ARG MOPIDY_YOUTUBE_VERSION=f14535e6aeec19d5a581aebe4b8143211b462cc4 # 3.7 + ytmu
 RUN python3 -m pip install git+https://github.com/natumbri/mopidy-youtube.git@$MOPIDY_YOUTUBE_VERSION
 
 # yt-dlp==2023.11.16 + patches
-ARG YTDLP_VERSION=bc4ab17b38f01000d99c5c2bedec89721fee65ec
-RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
+#ARG YTDLP_VERSION=bc4ab17b38f01000d99c5c2bedec89721fee65ec
+#RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
 
 # Install Mopidy-YTMusic from fork that supports newer pytube version.
 # Unfortunately, that did not help.
