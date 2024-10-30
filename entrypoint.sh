@@ -143,6 +143,11 @@ cat > /tmp/mopidy.conf <<-EOF
 	[tunein]
 	enabled = ${MOPIDY_TUNEIN_ENABLED:-false}
 	filter = ${MOPIDY_TUNEIN_FILTER:-}
+	[spotify]
+	enabled = ${MOPIDY_SPOTIFY_ENABLED:-false}
+	client_id = ${MOPIDY_SPOTIFY_CLIENT_ID:-}
+	client_secret = ${MOPIDY_SPOTIFY_CLIENT_SECRET:-}
+	bitrate = ${MOPIDY_SPOTIFY_BITRATE:-320}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf

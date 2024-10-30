@@ -162,7 +162,7 @@ spec:
     category: webm3u
   - name: MOPIDY_TUNEIN_ENABLED
     title: Enable TuneIn integration
-    description: Enable the TuneIn Mopidy Plugin
+    description: Enable the TuneIn Mopidy plugin
     type: boolean
     category: tunein
   - name: MOPIDY_TUNEIN_FILTER
@@ -172,3 +172,29 @@ spec:
       Allowed values are '', 'station' or 'program'.
     type: string
     category: tunein
+  - name: MOPIDY_SPOTIFY_ENABLED
+    title: Enable Spotify integration
+    description: Enable the Spotify Mopidy plugin
+    type: boolean
+    category: spotify
+  - name: MOPIDY_SPOTIFY_CLIENT_ID
+    title: Spotify client ID
+    description: |
+      Specify your client ID to access the Spotify API.
+      To obtain your Spotify client credentials, browse https://mopidy.com/ext/spotify/#authentication
+    type: string
+    category: spotify
+  - name: MOPIDY_SPOTIFY_CLIENT_SECRET
+    title: Spotify client secret
+    description: |
+      Specify your client secret to access the Spotify API.
+      To obtain your Spotify client credentials, browse https://mopidy.com/ext/spotify/#authentication
+    type: password
+    category: spotify
+  - name: MOPIDY_SPOTIFY_BITRATE
+    title: Spotify bitrate
+    description: |
+      Specify the audio bitrate to use.
+      Allowed values are 96, 160 and 320.
+    type: number
+    category: spotify

@@ -1,8 +1,25 @@
-FROM python:3-alpine3.19
+FROM rust:1.82-alpine3.20 AS rustbuild
+
+
+# Build gst-plugins-spotify (required by Mopidy-Spotify)
+FROM rust:1.82-alpine3.20 AS gst-plugins-spotify
+RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
+#ARG GST_PLUGINS_RS_VERSION=0.12.11
+ARG GST_PLUGINS_RS_VERSION=spotify-access-token-logging
+# Currently a gst-plugins-rs fork is required for token-based access.
+# See https://github.com/mopidy/mopidy-spotify/tree/v5.0.0a3?tab=readme-ov-file#dependencies
+RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=$GST_PLUGINS_RS_VERSION https://gitlab.freedesktop.org/kingosticks/gst-plugins-rs.git
+WORKDIR /gst-plugins-rs
+ENV RUSTFLAGS='-C target-feature=-crt-static'
+RUN cargo build --package gst-plugin-spotify --release
+
+
+# Build final mopidy container
+FROM python:3.12-alpine3.20
 RUN set -eux; \
 	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
 	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
-	python3 -m pip install \
+	python3 -m pip install --break-system-packages \
 		Mopidy==3.4.2 \
 		PyGObject==3.46.0 \
 		Mopidy-Iris==3.69.3 \
@@ -16,6 +33,7 @@ RUN set -eux; \
 		Mopidy-Party==1.2.1 \
 		Mopidy-AlarmClock==0.1.9 \
 		Mopidy-WebM3U==0.1.3 \
+		Mopidy-Spotify==5.0.0a3 \
 		ytmusicapi==1.3.2 \
 		yt-dlp==2024.10.22; \
 	apk del --purge $BUILD_DEPS
@@ -41,6 +59,8 @@ RUN python3 -m pip install git+https://github.com/mopidy/mopidy-beets@$MOPIDY_BE
 # Mopidy-Subidy==1.0.0 + coverart support
 ARG MOPIDY_SUBIDY_VERSION=fa3b21216d1a3b937e926d289f8f18f8277b6cc7
 RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-subidy@$MOPIDY_SUBIDY_VERSION
+
+COPY --from=gst-plugins-spotify /gst-plugins-rs/target/release/libgstspotify.so /usr/lib/gstreamer-1.0/
 
 COPY conf /etc/mopidy/extensions.d
 RUN set -ex; \
