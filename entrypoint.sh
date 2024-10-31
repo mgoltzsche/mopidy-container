@@ -159,4 +159,18 @@ if [ ! -f /var/lib/mopidy/.local-scanned ]; then
 fi
 
 echo 'Launching Mopidy'
-exec mopidy --config $MOPIDY_CONF ${MOPIDY_OPTS:-} "$@"
+
+mopidy --config $MOPIDY_CONF ${MOPIDY_OPTS:-} "$@" &
+MOPIDY_PID=$!
+
+terminateGracefully() {
+	trap : 2 15
+	kill -15 $MOPIDY_PID
+	wait $MOPIDY_PID
+	sleep 1 # give other processes time to log
+}
+
+trap terminateGracefully 2 15
+wait $MOPIDY_PID
+sleep 1 # give other processes time to log
+exit 1

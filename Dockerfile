@@ -1,6 +1,3 @@
-FROM rust:1.82-alpine3.20 AS rustbuild
-
-
 # Build gst-plugins-spotify (required by Mopidy-Spotify)
 FROM rust:1.82-alpine3.20 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
