@@ -1,5 +1,5 @@
 # Build gst-plugins-spotify (required by Mopidy-Spotify)
-FROM rust:1.82-alpine3.20 AS gst-plugins-spotify
+FROM rust:1.89-alpine3.22 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 #ARG GST_PLUGINS_RS_VERSION=0.12.11
 ARG GST_PLUGINS_RS_VERSION=spotify-access-token-logging
@@ -12,27 +12,27 @@ RUN cargo build --package gst-plugin-spotify --release
 
 
 # Build final mopidy container
-FROM python:3.12-alpine3.20
+FROM python:3.12-alpine3.22
 RUN set -eux; \
 	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
 	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
 	python3 -m pip install --break-system-packages \
 		Mopidy==3.4.2 \
-		PyGObject==3.46.0 \
-		Mopidy-Iris==3.69.3 \
+		PyGObject==3.52.3 \
+		Mopidy-Iris==3.70.0 \
 		Mopidy-Autoplay==0.2.3 \
 		Mopidy-MPD==3.3.0 \
-		Mopidy-Local==3.2.1 \
+		Mopidy-Local==3.3.0 \
 		Mopidy-SoundCloud==3.0.2 \
 		Mopidy-Podcast==3.0.1 \
 		Mopidy-SomaFM==2.0.2 \
 		Mopidy-TuneIn==1.1.0 \
-		Mopidy-Party==1.2.1 \
+		Mopidy-Party==1.2.2 \
 		Mopidy-AlarmClock==0.1.9 \
 		Mopidy-WebM3U==0.1.3 \
 		Mopidy-Spotify==5.0.0a3 \
-		ytmusicapi==1.3.2 \
-		yt-dlp==2024.10.22; \
+		ytmusicapi==1.11.0 \
+		yt-dlp==2025.8.11; \
 	apk del --purge $BUILD_DEPS
 
 # Mopidy-Youtube==3.7
@@ -50,7 +50,7 @@ RUN python3 -m pip install git+https://github.com/natumbri/mopidy-youtube.git@$M
 #RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
 
 # Mopidy-Beets==4.0.1 + none-album patch
-ARG MOPIDY_BEETS_VERSION=7fbdf56c6b6b8318974e4add6446e15654df4bea
+ARG MOPIDY_BEETS_VERSION=2b1f23804dc6b03764cffcc7154104d2fb0abbff
 RUN python3 -m pip install git+https://github.com/mopidy/mopidy-beets@$MOPIDY_BEETS_VERSION
 
 # Mopidy-Subidy==1.0.0 + coverart support
