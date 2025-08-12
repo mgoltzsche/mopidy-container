@@ -148,6 +148,7 @@ cat > /tmp/mopidy.conf <<-EOF
 	client_id = ${MOPIDY_SPOTIFY_CLIENT_ID:-}
 	client_secret = ${MOPIDY_SPOTIFY_CLIENT_SECRET:-}
 	bitrate = ${MOPIDY_SPOTIFY_BITRATE:-320}
+	cache_size = ${MOPIDY_SPOTIFY_CACHE_SIZE:-3000}
 EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
