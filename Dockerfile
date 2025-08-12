@@ -15,7 +15,7 @@ RUN cargo build --package gst-plugin-spotify --release
 FROM python:3.12-alpine3.22
 RUN set -eux; \
 	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
-	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
+	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad gst-plugins-ugly sox openssl ca-certificates git bash jq; \
 	python3 -m pip install --break-system-packages \
 		Mopidy==3.4.2 \
 		PyGObject==3.52.3 \
