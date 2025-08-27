@@ -1,43 +1,45 @@
-version: "3.6"
 volumes:
-  snapserver-settings:
   snapserver-fifo:
+  snapserver-state:
+  mopidy-data:
+
 services:
   snapclient:
-    image: mgoltzsche/snapcast/snapclient:dev
+    image: ghcr.io/mgoltzsche/snapcast-client:0.8.0
     environment:
       SNAPCLIENT_HOST: 127.0.0.1
-      #SNAPCLIENT_PLAYER: pulse:server=tcp:127.0.0.1:4713
     network_mode: host
-    restart: unless-stopped
-    # Might be required on a raspberrypi when using alsa directly
+    # Must be privileged when using alsa directly (e.g. on a raspberry pi)
     #privileged: true
+    user: ${UID:-1000}:${UID:-1000}
     devices:
-    - "/dev/snd:/dev/snd"
+    - "/dev/snd:/dev/snd" # to access alsa device directly
     volumes:
-    #- type: bind
-    #  source: /etc/asound.conf
-    #  target: /etc/asound.conf
     - type: bind
       source: /run # allow the container to detect whether the pulseaudio unix socket should be used
       target: /host/run
     - type: bind
+      source: $HOME/.config/pulse # pass through pulseaudio authentication
+      target: /home/snapclient/.config/pulse
+    - type: bind
       source: /etc # allow the container to use host's /etc/asound.conf if present
       target: /host/etc
       read_only: true
-    user: ${UID:-1000}:${UID:-1000}
-    #profiles:
-    #- audio-sink
+    depends_on:
+    - snapserver
+    restart: unless-stopped
   snapserver:
-    image: mgoltzsche/snapcast/snapserver:dev
+    image: ghcr.io/mgoltzsche/snapcast-server:0.8.0
     environment:
-      SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=default&mode=read
-      #SNAPSERVER_BUFFER_MS: 20
+      SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=Mopidy&mode=create
+      #SNAPSERVER_SOURCE: tcp://127.0.0.1:1709?name=default
+      SNAPSERVER_BUFFER_MS: "500"
+      SNAPSERVER_INITIAL_VOLUME: "30"
       # Advertize avahi service
       DBUS_SYSTEM_BUS_ADDRESS: unix:path=/host/run/dbus/system_bus_socket
     volumes:
     - snapserver-fifo:/snapserver
-    - snapserver-settings:/data
+    - snapserver-state:/var/lib/snapserver
     - type: bind
       # allow the container to dynamically select the pulseaudio and dbus unix socket, if supported by the host
       source: /run
@@ -54,24 +56,17 @@ services:
     - 4242
     - 86
     restart: unless-stopped
-    labels:
-    - podpourpi.avahi.advertize=true # TODO: feasibility check? -> not worth it
-    depends_on:
-    - mopidy
-    #profiles:
-    #- audio-source
   mopidy:
-    image: mgoltzsche/mopidy:dev
+    image: ghcr.io/mgoltzsche/mopidy:dev
     environment:
+      #MOPIDY_AUDIO_OUTPUT: 'audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! tcpclientsink host=127.0.0.1 port=1709'
       MOPIDY_AUDIO_OUTPUT_PIPE: /snapserver/snapfifo
+    network_mode: host
+    #ports:
+    #- "6680:6680"
     volumes:
     - snapserver-fifo:/snapserver
-    ports:
-    - "6680:6680"
-    labels:
-    - traefik.enable=true
-    - traefik.http.routers.myapp.rule=PathPrefix("/iris")
-    - traefik.http.routers.myapp.entrypoints=web
+    - mopidy-data:/var/lib/mopidy
     restart: unless-stopped
-    #profiles:
-    #- audio-source
+    depends_on:
+    - snapserver

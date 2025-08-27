@@ -18,6 +18,11 @@ run-mopidy: image ## Run mopidy container simply using docker.
 		-e MOPIDY_WEBM3U_SEED_M3U='http://localhost:8337/m3u/playlists/index.m3u?uri-format=subidy:song:3$$id' \
 		ghcr.io/mgoltzsche/mopidy:dev
 
+.PHONY: run-snapcast-compose
+run-snapcast-compose: ## Run compose project with snapcast.
+	make SKAFFOLD_OPTS='-t dev'
+	docker compose up
+
 .PHONY: clean-data
 clean-data: ## Delete temporary mopidy data.
 	docker run --rm -v "`pwd`:/src" -w /src alpine:3.18 rm -rf data
