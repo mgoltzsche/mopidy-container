@@ -37,7 +37,7 @@ spec:
           mountPath: /var/lib/mopidy
       containers:
       - name: app
-        image: ghcr.io/mgoltzsche/mopidy:0.8.1 # kpt-set: ${image}:${version}
+        image: ghcr.io/mgoltzsche/mopidy:dev # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env:
         - name: MOPIDY_AUDIO_OUTPUT
@@ -78,4 +78,4 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: mopidy-data
+          claimName: mopidy-data # kpt-set: ${name}-data
