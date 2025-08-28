@@ -27,24 +27,26 @@ fi
 
 # Generate mopidy config
 
-if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
-	if [ ! -p "$MOPIDY_AUDIO_OUTPUT_PIPE" ]; then
-		echo "Creating PCM audio output pipe at $MOPIDY_AUDIO_OUTPUT_PIPE"
-		mkfifo -m 640 "$MOPIDY_AUDIO_OUTPUT_PIPE"
+if [ ! "${MOPIDY_AUDIO_OUTPUT:-}" ]; then
+	if [ "${MOPIDY_AUDIO_OUTPUT_PIPE:-}" ]; then
+		if [ ! -p "$MOPIDY_AUDIO_OUTPUT_PIPE" ]; then
+			echo "Creating PCM audio output pipe at $MOPIDY_AUDIO_OUTPUT_PIPE"
+			mkfifo -m 640 "$MOPIDY_AUDIO_OUTPUT_PIPE"
+		fi
+		MOPIDY_AUDIO_OUTPUT="audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_AUDIO_OUTPUT_PIPE"
+		if [ "${MOPIDY_AUDIO_OUTPUT_PIPE_GENERATE_SOUND:-true}" = true ]; then
+			(
+				sleep 9
+				sox -V -r 48000 -n -b 16 -c 2 /tmp/start.wav synth 3 sin 0+15000 sin 1000+80000 vol -10db remix 1,2 channels 2 &&
+				cat /tmp/start.wav > "$MOPIDY_AUDIO_OUTPUT_PIPE"
+			) &
+		fi
+	elif [ "${PULSE_SERVER:-}" ]; then
+		MOPIDY_AUDIO_OUTPUT="pulsesink server=$PULSE_SERVER"
+	else
+		echo 'Must specify one of env vars MOPIDY_AUDIO_OUTPUT, MOPIDY_AUDIO_OUTPUT_PIPE or PULSE_SERVER but none specified' >&2
+		exit 1
 	fi
-	MOPIDY_AUDIO_OUTPUT="audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! filesink location=$MOPIDY_AUDIO_OUTPUT_PIPE"
-	if [ "${MOPIDY_AUDIO_OUTPUT_PIPE_GENERATE_SOUND:-true}" = true ]; then
-		(
-			sleep 9
-			sox -V -r 48000 -n -b 16 -c 2 /tmp/start.wav synth 3 sin 0+15000 sin 1000+80000 vol -10db remix 1,2 channels 2 &&
-			cat /tmp/start.wav > "$MOPIDY_AUDIO_OUTPUT_PIPE"
-		) &
-	fi
-elif [ "${PULSE_SERVER:-}" ]; then
-	MOPIDY_AUDIO_OUTPUT="pulsesink server=$PULSE_SERVER"
-else
-	echo 'Must specify one env var of MOPIDY_AUDIO_OUTPUT, MOPIDY_AUDIO_OUTPUT_PIPE or PULSE_SERVER but none specified' >&2
-	exit 1
 fi
 if [ "$MOPIDY_AUDIO_OUTPUT_REPLAYGAIN" = true ]; then
 	MOPIDY_AUDIO_OUTPUT="rgvolume ! $MOPIDY_AUDIO_OUTPUT"

@@ -9,7 +9,6 @@ metadata: # kpt-merge: /app-config
     internal.kpt.dev/upstream-identifier: '|ConfigMap|default|app-config'
 data:
   version: "0.8.1"
-  snapcast-version: "0.7.0"
   name: mopidy
   title: Mopidy
   port: 6680

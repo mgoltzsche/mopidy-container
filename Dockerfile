@@ -74,7 +74,7 @@ COPY default-data/Podcasts.opml /etc/mopidy/podcast/Podcasts.opml
 COPY default-data /etc/mopidy/default-data
 USER mopidy:audio
 ENV MOPIDY_MPD_PASSWORD=generate \
-	MOPIDY_IRIS_SNAPCAST_PORT=443
+	MOPIDY_IRIS_SNAPCAST_PORT=1780
 COPY entrypoint.sh ytmusicapi-login.py /
 ENTRYPOINT [ "/entrypoint.sh" ]
 HEALTHCHECK --interval=10s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/

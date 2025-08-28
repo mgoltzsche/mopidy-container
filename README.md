@@ -1,6 +1,11 @@
 # Mopidy and Snapcast
 
-This repo aims to provide an opinionated, containerized bundle of [Mopidy](https://github.com/mopidy/mopidy) and [Snapcast](https://github.com/badaix/snapcast) that runs on both an amd64 linux machine and a Raspberry Pi.  
+An opinionated, containerized bundle of [Mopidy](https://github.com/mopidy/mopidy) and [Snapcast](https://github.com/badaix/snapcast) that runs on both an amd64 linux machine and a Raspberry Pi.  
+
+It can be deployed as follows:
+* As a [docker-compose project](./docker-compose.yaml).
+* As a [Kubernetes app](./deploy) (without Snapcast, assuming it was installed separately).
+* Via [Kubemate](https://github.com/mgoltzsche/kubemate)' web GUI.
 
 ## Development
 

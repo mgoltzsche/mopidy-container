@@ -198,20 +198,3 @@ spec:
       Allowed values are 96, 160 and 320.
     type: number
     category: spotify
-  - name: SNAPSERVER_BUFFER_MS
-    title: Buffer size (ms)
-    type: number
-    category: Snapcast
-    description: The end-to-end latency, from capturing a sample on the server until the sample is played-out on the client.
-  - name: SNAPSERVER_CODEC
-    title: Codec
-    type: string
-    category: Snapcast
-    description: |
-      The codec used to transport the audio data to clients.
-      Supported values are flac, ogg, opus, pcm.
-  - name: SNAPSERVER_INITIAL_VOLUME
-    title: Default volume
-    type: number
-    category: Snapcast
-    description: The initial volume for new Snapcast clients.

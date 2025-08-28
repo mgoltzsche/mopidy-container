@@ -32,10 +32,9 @@ services:
     image: ghcr.io/mgoltzsche/snapcast-server:0.8.0
     environment:
       SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=Mopidy&mode=create
-      #SNAPSERVER_SOURCE: tcp://127.0.0.1:1709?name=default
       SNAPSERVER_BUFFER_MS: "500"
       SNAPSERVER_INITIAL_VOLUME: "30"
-      # Advertize avahi service
+      # Advertize service via avahi
       DBUS_SYSTEM_BUS_ADDRESS: unix:path=/host/run/dbus/system_bus_socket
     volumes:
     - snapserver-fifo:/snapserver

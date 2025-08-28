@@ -39,6 +39,11 @@ spec:
       - name: app
         image: ghcr.io/mgoltzsche/mopidy:0.8.1 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
+        env:
+        - name: MOPIDY_AUDIO_OUTPUT
+          value: audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! tcpclientsink host=snapcast port=1709
+        - name: MOPIDY_IRIS_SNAPCAST_PORT
+          value: "443"
         resources:
           limits:
             cpu: 1200m
