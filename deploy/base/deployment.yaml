@@ -46,7 +46,6 @@ spec:
           value: "443"
         resources:
           limits:
-            cpu: 1200m
             memory: 4Gi # since it loads entire youtube tracks into memory apparently
           requests:
             cpu: 700m
