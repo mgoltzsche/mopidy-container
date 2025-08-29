@@ -1,11 +1,11 @@
-# Mopidy and Snapcast
+# Mopidy container
 
-An opinionated, containerized bundle of [Mopidy](https://github.com/mopidy/mopidy) and [Snapcast](https://github.com/badaix/snapcast) that runs on both an amd64 linux machine and a Raspberry Pi.  
+An opinionated [Mopidy](https://github.com/mopidy/mopidy) container built for amd64 or arm64 (e.g. Raspberry Pi) linux machines designed to stream audio to [Snapcast](https://github.com/badaix/snapcast).  
 
-It can be deployed as follows:
-* As a [docker-compose project](./docker-compose.yaml).
-* As a [Kubernetes app](./deploy) (without Snapcast, assuming it was installed separately).
-* Via [Kubemate](https://github.com/mgoltzsche/kubemate)' web GUI.
+It can be deployed using one of the following ways:
+* as a [Docker Compose project](./docker-compose.yaml) that also includes a [Snapcast container](https://github.com/mgoltzsche/snapcast-container).
+* as a [Kubernetes app](./deploy) (without Snapcast, assuming it was installed separately).
+* via the [Kubemate](https://github.com/mgoltzsche/kubemate) web GUI.
 
 ## Development
 
@@ -32,6 +32,11 @@ make run-mopidy
 ```
 
 Once mopidy started, you can browse it at [`http://localhost:6680`](http://localhost:6680).
+
+To run the compose project:
+```sh
+make run-snapcast-compose
+```
 
 ### Troubleshooting
 
