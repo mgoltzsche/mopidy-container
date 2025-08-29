@@ -198,3 +198,10 @@ spec:
       Allowed values are 96, 160 and 320.
     type: number
     category: spotify
+  - name: MOPIDY_LOCAL_ENABLED
+    title: Enable Mopidy Local plugin
+    description: |
+      Enable the Mopidy Local plugin.
+      This allows accessing music on the local file system of the Mopidy container.
+    type: boolean
+    category: local

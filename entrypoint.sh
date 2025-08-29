@@ -105,6 +105,8 @@ cat > /tmp/mopidy.conf <<-EOF
 	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
 	password = $MOPIDY_MPD_PASSWORD
+	[local]
+	enabled = ${MOPIDY_LOCAL_ENABLED:-false}
 	[youtube]
 	enabled = ${MOPIDY_YOUTUBE_ENABLED:-true}
 	autoplay_enabled = ${MOPIDY_YOUTUBE_AUTOPLAY_ENABLED:-true}
