@@ -105,6 +105,8 @@ cat > /tmp/mopidy.conf <<-EOF
 	snapcast_port = $MOPIDY_IRIS_SNAPCAST_PORT
 	[mpd]
 	password = $MOPIDY_MPD_PASSWORD
+	[file]
+	enabled = ${MOPIDY_FILE_ENABLED:-false}
 	[local]
 	enabled = ${MOPIDY_LOCAL_ENABLED:-false}
 	[podcast]
