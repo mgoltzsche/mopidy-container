@@ -107,6 +107,8 @@ cat > /tmp/mopidy.conf <<-EOF
 	password = $MOPIDY_MPD_PASSWORD
 	[local]
 	enabled = ${MOPIDY_LOCAL_ENABLED:-false}
+	[podcast]
+	enabled = ${MOPIDY_PODCAST_ENABLED:-false}
 	[youtube]
 	enabled = ${MOPIDY_YOUTUBE_ENABLED:-true}
 	autoplay_enabled = ${MOPIDY_YOUTUBE_AUTOPLAY_ENABLED:-true}

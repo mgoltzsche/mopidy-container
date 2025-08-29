@@ -205,3 +205,10 @@ spec:
       This allows accessing music on the local file system of the Mopidy container.
     type: boolean
     category: local
+  - name: MOPIDY_PODCAST_ENABLED
+    title: Enable Mopidy Podcast plugin
+    description: |
+      Enable the Mopidy Podcast plugin.
+      This allows accessing Podcasts that are stored on disk, see https://mopidy.com/ext/podcast/
+    type: boolean
+    category: podcast
