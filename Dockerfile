@@ -2,10 +2,15 @@
 FROM rust:1.89-alpine3.22 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 #ARG GST_PLUGINS_RS_VERSION=0.12.11
-ARG GST_PLUGINS_RS_VERSION=spotify-access-token-logging
+#ARG GST_PLUGINS_RS_VERSION=spotify-access-token-logging
+# 0.14.1 + librespot 0.7.0 patch
+ARG GST_PLUGINS_RS_VERSION=fb63b89fa2eaac07a196c80de386f4790bc6517d
 # Currently a gst-plugins-rs fork is required for token-based access.
 # See https://github.com/mopidy/mopidy-spotify/tree/v5.0.0a3?tab=readme-ov-file#dependencies
-RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=$GST_PLUGINS_RS_VERSION https://gitlab.freedesktop.org/kingosticks/gst-plugins-rs.git
+RUN set -eux; \
+	git clone -c 'advice.detachedHead=false' https://gitlab.freedesktop.org/gdesmott/gst-plugins-rs.git; \
+	cd gst-plugins-rs; \
+	git checkout "$GST_PLUGINS_RS_VERSION"
 WORKDIR /gst-plugins-rs
 ENV RUSTFLAGS='-C target-feature=-crt-static'
 RUN cargo build --package gst-plugin-spotify --release
@@ -15,7 +20,7 @@ RUN cargo build --package gst-plugin-spotify --release
 FROM python:3.12-alpine3.22
 RUN set -eux; \
 	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
-	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad gst-plugins-ugly sox openssl ca-certificates git bash jq; \
+	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
 	python3 -m pip install --break-system-packages \
 		Mopidy==3.4.2 \
 		PyGObject==3.52.3 \
