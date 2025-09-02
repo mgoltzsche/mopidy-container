@@ -5,6 +5,7 @@ set -eu
 : ${MOPIDY_HTTP_ALLOWED_ORIGINS:=https://${HOSTNAME},https://${HOSTNAME}:8443}
 : ${MOPIDY_IRIS_SNAPCAST_HOST:=$HOSTNAME}
 : ${MOPIDY_AUDIO_OUTPUT_REPLAYGAIN:=true}
+: ${MOPIDY_LOCAL_ENABLED:=false}
 : ${MOPIDY_SUBIDY_ENABLED:=false}
 : ${MOPIDY_SUBIDY_URL:=http://127.0.0.1:8080}
 : ${MOPIDY_SUBIDY_USERNAME:=user}
@@ -108,7 +109,7 @@ cat > /tmp/mopidy.conf <<-EOF
 	[file]
 	enabled = ${MOPIDY_FILE_ENABLED:-false}
 	[local]
-	enabled = ${MOPIDY_LOCAL_ENABLED:-false}
+	enabled = $MOPIDY_LOCAL_ENABLED
 	[podcast]
 	enabled = ${MOPIDY_PODCAST_ENABLED:-false}
 	[youtube]
@@ -161,7 +162,7 @@ EOF
 
 MOPIDY_CONF=/etc/mopidy/mopidy.conf:/etc/mopidy/extensions.d:/tmp/mopidy.conf
 
-if [ ! -f /var/lib/mopidy/.local-scanned ]; then
+if [ "$MOPIDY_LOCAL_ENABLED" = true ] && [ ! -f /var/lib/mopidy/.local-scanned ]; then
 	echo 'Scanning media directory for audio files'
 	mopidy --config $MOPIDY_CONF local scan
 	touch /var/lib/mopidy/.local-scanned
