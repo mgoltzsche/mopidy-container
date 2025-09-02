@@ -42,6 +42,10 @@ spec:
         env:
         - name: MOPIDY_AUDIO_OUTPUT
           value: audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! tcpclientsink host=snapcast port=1709
+        - name: MOPIDY_IRIS_SNAPCAST_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         - name: MOPIDY_IRIS_SNAPCAST_PORT
           value: "443"
         resources:
