@@ -5,7 +5,7 @@ volumes:
 
 services:
   snapclient:
-    image: ghcr.io/mgoltzsche/snapcast-client:0.8.0
+    image: ghcr.io/mgoltzsche/snapcast-client:0.9.0
     environment:
       SNAPCLIENT_HOST: 127.0.0.1
     network_mode: host
@@ -29,7 +29,7 @@ services:
     - snapserver
     restart: unless-stopped
   snapserver:
-    image: ghcr.io/mgoltzsche/snapcast-server:0.8.0
+    image: ghcr.io/mgoltzsche/snapcast-server:0.9.0
     environment:
       SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=Mopidy&mode=create
       SNAPSERVER_BUFFER_MS: "500"
