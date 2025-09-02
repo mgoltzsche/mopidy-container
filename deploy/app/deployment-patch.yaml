@@ -24,9 +24,3 @@ spec:
             name: ${APP_NAME:=app}-defaultconfig
         - secretRef:
             name: ${APP_CONFIG_SECRET_NAME:=app-defaultconfig}
-      - name: snapserver
-        envFrom:
-        - secretRef:
-            name: ${APP_NAME:=app}-defaultconfig
-        - secretRef:
-            name: ${APP_CONFIG_SECRET_NAME:=app-defaultconfig}
