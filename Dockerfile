@@ -1,14 +1,14 @@
 # Build gst-plugins-spotify (required by Mopidy-Spotify)
-FROM rust:1.89-alpine3.22 AS gst-plugins-spotify
+FROM rust:1.85-alpine3.21 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 #ARG GST_PLUGINS_RS_VERSION=0.12.11
 #ARG GST_PLUGINS_RS_VERSION=spotify-access-token-logging
 # 0.14.1 + librespot 0.7.0 patch, see https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/merge_requests/2521
-ARG GST_PLUGINS_RS_VERSION=fb63b89fa2eaac07a196c80de386f4790bc6517d
+ARG GST_PLUGINS_RS_VERSION=9af4ac41b92b2df9367cf288bdf7b72ad504607e
 # Currently a gst-plugins-rs fork is required for token-based access.
 # See https://github.com/mopidy/mopidy-spotify/tree/v5.0.0a3?tab=readme-ov-file#dependencies
 RUN set -eux; \
-	git clone -c 'advice.detachedHead=false' https://gitlab.freedesktop.org/gdesmott/gst-plugins-rs.git; \
+	git clone -c 'advice.detachedHead=false' https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git; \
 	cd gst-plugins-rs; \
 	git checkout "$GST_PLUGINS_RS_VERSION"
 WORKDIR /gst-plugins-rs
