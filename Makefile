@@ -4,11 +4,12 @@
 
 KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.32
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.9.0
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.16.1
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
 DOCKER ?= docker
+DOCKER_GID = $(shell grep docker:x: /etc/group | sed -E 's/docker:x:([0-9]+):.+/\1/')
 
 # Include a custom Makefile if exists.
 sinclude Makefile-ext.mk
@@ -39,9 +40,9 @@ debug: skaffold-debug ## Deploy the application in debug mode.
 .PHONY: render
 render: kpt-fn-render ## Run kpt render pipeline, applying setters.yaml.
 kpt-fn-render: kpt-fn-%:
-	$(DOCKER) run -i --rm -u "`id -u`:`id -g`" --group-add 998 \
-		-v "/var/run/docker.sock:/var/run/docker.sock" \
+	$(DOCKER) run -i --rm -u "`id -u`:`id -g`" --group-add=$(DOCKER_GID) \
 		-v "`pwd`:/workspace" \
+		--mount "type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock" \
 		$(KPT_IMAGE) fn $* /workspace --truncate-output=false
 
 .PHONY: blueprint-update
@@ -57,9 +58,9 @@ skaffold-debug skaffold-dev: DOCKER_RUN_OPTS += -ti
 skaffold-debug skaffold-dev skaffold-run skaffold-stop skaffold-delete: DOCKER_RUN_OPTS += --mount "type=bind,src=$(KUBECONFIG),dst=/tmp/.kube/config,ro"
 skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-debug skaffold-survey skaffold-help: skaffold-%:
 	mkdir -p $$HOME/.docker
-	$(DOCKER) run $(DOCKER_RUN_OPTS) --rm -u "`id -u`:`id -g`" --group-add=998 \
+	$(DOCKER) run $(DOCKER_RUN_OPTS) --rm -u "`id -u`:`id -g`" --group-add=$(DOCKER_GID) \
 		-v "`pwd`:/workspace" -w /workspace --network=host \
-		-v "/var/run/docker.sock:/var/run/docker.sock" \
+		--mount "type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock" \
 		--mount "type=bind,src=$$HOME/.docker,dst=/tmp/.docker" \
 		-e HOME=/tmp \
 		$(SKAFFOLD_IMAGE) skaffold $* $(SKAFFOLD_OPTS)
