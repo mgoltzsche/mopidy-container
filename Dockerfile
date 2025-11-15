@@ -1,5 +1,5 @@
 # Build gst-plugins-spotify (required by Mopidy-Spotify)
-FROM rust:1.91-alpine3.22 AS gst-plugins-spotify
+FROM rust:1.86-alpine3.21 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 # 0.14.3 + librespot 0.8.0 patch, see https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/merge_requests/2688
 ARG GST_PLUGINS_RS_VERSION=d5caedfc861326539bb251d2ec8d533279e90c66
