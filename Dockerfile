@@ -1,5 +1,5 @@
 # Build gst-plugins-spotify (required by Mopidy-Spotify)
-FROM rust:1.86-alpine3.21 AS gst-plugins-spotify
+FROM rust:1.92-alpine3.23 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 # 0.14.3 + librespot 0.8.0 patch, see https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/merge_requests/2688
 ARG GST_PLUGINS_RS_VERSION=0.15.1
@@ -15,11 +15,12 @@ RUN cargo build --package gst-plugin-spotify --release
 
 
 # Build final mopidy container
-FROM python:3.12-alpine3.20
+FROM python:3.14-alpine3.23
 RUN set -eux; \
 	BUILD_DEPS='python3-dev gcc musl-dev cairo-dev gobject-introspection-dev'; \
 	apk add --update --no-cache $BUILD_DEPS py3-pip py3-gst cairo gobject-introspection gst-plugins-good gst-plugins-bad sox openssl ca-certificates git bash jq; \
 	python3 -m pip install --break-system-packages \
+		setuptools==80.9.0 \
 		Mopidy==3.4.2 \
 		PyGObject==3.52.3 \
 		Mopidy-Iris==3.70.0 \
@@ -45,12 +46,6 @@ RUN python3 -m pip install git+https://github.com/natumbri/mopidy-youtube.git@$M
 # yt-dlp==2023.11.16 + patches
 #ARG YTDLP_VERSION=bc4ab17b38f01000d99c5c2bedec89721fee65ec
 #RUN python3 -m pip install git+https://github.com/yt-dlp/yt-dlp@$YTDLP_VERSION
-
-# Install Mopidy-YTMusic from fork that supports newer pytube version.
-# Unfortunately, that did not help.
-# See https://github.com/OzymandiasTheGreat/mopidy-ytmusic/issues/41
-#ARG MOPIDY_YTMUSIC_VERSION=c60055bc4cbc35534ef4c141fc883928bf5ca280 # 0.3.8 + pytube patch
-#RUN python3 -m pip install git+https://github.com/mgoltzsche/mopidy-ytmusic.git@$MOPIDY_YTMUSIC_VERSION
 
 # Mopidy-Beets==4.0.1 + none-album patch
 ARG MOPIDY_BEETS_VERSION=2b1f23804dc6b03764cffcc7154104d2fb0abbff
