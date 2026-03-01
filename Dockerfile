@@ -75,4 +75,4 @@ ENV MOPIDY_MPD_PASSWORD=generate \
 	MOPIDY_IRIS_SNAPCAST_PORT=1780
 COPY entrypoint.sh ytmusicapi-login.py /
 ENTRYPOINT [ "/entrypoint.sh" ]
-HEALTHCHECK --interval=10s --timeout=3s CMD wget -O - http://127.0.0.1:6680/mopidy/
+HEALTHCHECK --interval=15s --timeout=10s CMD wget -O - http://127.0.0.1:6680/mopidy/
