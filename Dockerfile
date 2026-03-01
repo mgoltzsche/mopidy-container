@@ -2,11 +2,11 @@
 FROM rust:1.86-alpine3.21 AS gst-plugins-spotify
 RUN apk add --update --no-cache git musl-dev pkgconf glib-dev glib-static gstreamer-dev
 # 0.14.3 + librespot 0.8.0 patch, see https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/merge_requests/2688
-ARG GST_PLUGINS_RS_VERSION=d5caedfc861326539bb251d2ec8d533279e90c66
+ARG GST_PLUGINS_RS_VERSION=0.15.1
 # Currently a gst-plugins-rs fork is required for token-based access.
 # See https://github.com/mopidy/mopidy-spotify/tree/v5.0.0a3?tab=readme-ov-file#dependencies
 RUN set -eux; \
-	git clone -c 'advice.detachedHead=false' https://gitlab.freedesktop.org/max.goltzsche/gst-plugins-rs.git; \
+	git clone -c 'advice.detachedHead=false' https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git; \
 	cd gst-plugins-rs; \
 	git checkout "$GST_PLUGINS_RS_VERSION"
 WORKDIR /gst-plugins-rs
