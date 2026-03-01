@@ -35,8 +35,8 @@ RUN set -eux; \
 		Mopidy-AlarmClock==0.1.9 \
 		Mopidy-WebM3U==0.1.3 \
 		Mopidy-Spotify==5.0.0a3 \
-		ytmusicapi==1.11.0 \
-		yt-dlp==2025.8.11; \
+		ytmusicapi==1.11.5 \
+		yt-dlp==2026.2.21; \
 	apk del --purge $BUILD_DEPS
 
 # Mopidy-Youtube==3.7
